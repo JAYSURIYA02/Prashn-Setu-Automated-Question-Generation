@@ -39,6 +39,18 @@ def cmd_evaluate(args):
         batch_size=args.batch_size
     )
 
+def cmd_compare(args):
+    from src.evaluation.compare_models import run_model_comparison_benchmark
+    run_model_comparison_benchmark(
+        test_data_path=args.test_data,
+        output_path=args.output,
+        max_eval_samples=args.max_samples,
+        batch_size=args.batch_size,
+        num_beams=args.num_beams,
+        max_length=args.max_length,
+        models_to_test=args.models
+    )
+
 def main():
     parser = argparse.ArgumentParser(
         description="Prashn-Setu: IndicBART Question Generation Execution Center",
@@ -65,7 +77,7 @@ def main():
     p_demo.add_argument("--port", type=int, default=7860, help="Port to listen on (default 7860)")
     p_demo.set_defaults(func=cmd_demo)
 
-    # 3. Evaluate
+    # 3. Evaluate Single Checkpoint
     p_eval = subparsers.add_parser("evaluate", help="Benchmark checkpoint on test dataset")
     p_eval.add_argument("--checkpoint", type=str, default=default_checkpoint, help="Checkpoint path to load")
     p_eval.add_argument("--test_data", type=str, default=None, help="Path to test JSONL file")
@@ -73,6 +85,17 @@ def main():
     p_eval.add_argument("--max_samples", type=int, default=100, help="Max test samples (0 for all)")
     p_eval.add_argument("--batch_size", type=int, default=32, help="Inference batch size")
     p_eval.set_defaults(func=cmd_evaluate)
+
+    # 4. Compare Models
+    p_comp = subparsers.add_parser("compare", help="Run formal multi-model comparison benchmark")
+    p_comp.add_argument("--test_data", type=str, default=None, help="Path to test JSONL file")
+    p_comp.add_argument("--output", type=str, default="results/model_comparison_results.json", help="Output JSON")
+    p_comp.add_argument("--max_samples", type=int, default=100, help="Max test samples")
+    p_comp.add_argument("--batch_size", type=int, default=16, help="Batch size")
+    p_comp.add_argument("--num_beams", type=int, default=4, help="Beam size")
+    p_comp.add_argument("--max_length", type=int, default=64, help="Max target tokens")
+    p_comp.add_argument("--models", nargs="+", default=None, help="Model IDs to test (e.g. stage1 stage2)")
+    p_comp.set_defaults(func=cmd_compare)
 
     args = parser.parse_args()
     if not hasattr(args, "func"):

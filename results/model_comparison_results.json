@@ -1,0 +1,204 @@
+{
+  "metadata": {
+    "timestamp": "2026-10-25T12:15:41.318149+00:00",
+    "evaluated_sample_count": 10,
+    "test_dataset": "C:\\Users\\jaysu\\Downloads\\send\\send\\data\\hi_test.jsonl",
+    "decoding_parameters": {
+      "strategy": "beam_search",
+      "num_beams": 4,
+      "max_length": 64,
+      "no_repeat_ngram_size": 3,
+      "batch_size": 16
+    },
+    "metric_definitions": {
+      "sacreBLEU": "Corpus-level SacreBLEU with standard smoothing",
+      "bleu_1_to_4": "NLTK sentence-smoothed n-gram BLEU (1 to 4)",
+      "rouge": "Standard Hugging Face ROUGE (rouge1, rouge2, rougeL)",
+      "rouge_hindi_tokenized": "Whitespace tokenized ROUGE for Devanagari morphemes",
+      "chrF++": "chrF++ with word_order=2 character n-gram scoring",
+      "mean_latency_ms": "Average generation latency per sample in milliseconds"
+    }
+  },
+  "models": {
+    "stage1": {
+      "model_id": "stage1",
+      "name": "Stage 1: IndicBART + IndicNLG QG",
+      "checkpoint": "checkpoints/stage1_indicnlg_qg",
+      "total_samples": 10,
+      "total_runtime_seconds": 24.56,
+      "samples_per_second": 0.41,
+      "mean_latency_ms": 2455.72,
+      "metrics": {
+        "sacreBLEU": 1.829,
+        "bleu_1": 14.483,
+        "bleu_2": 7.116,
+        "bleu_3": 2.962,
+        "bleu_4": 2.029,
+        "rouge1": 0.0,
+        "rouge2": 0.0,
+        "rougeL": 0.0,
+        "rouge1_hindi": 18.864,
+        "rouge2_hindi": 4.969,
+        "rougeL_hindi": 17.075,
+        "chrF++": 19.861
+      }
+    },
+    "stage2": {
+      "model_id": "stage2",
+      "name": "Stage 2: NCERT Curriculum Adapted (LoRA)",
+      "checkpoint": "checkpoints/stage2_ncert_gold_lora",
+      "total_samples": 10,
+      "total_runtime_seconds": 22.12,
+      "samples_per_second": 0.45,
+      "mean_latency_ms": 2212.41,
+      "metrics": {
+        "sacreBLEU": 1.829,
+        "bleu_1": 14.483,
+        "bleu_2": 7.116,
+        "bleu_3": 2.962,
+        "bleu_4": 2.029,
+        "rouge1": 0.0,
+        "rouge2": 0.0,
+        "rougeL": 0.0,
+        "rouge1_hindi": 18.864,
+        "rouge2_hindi": 4.969,
+        "rougeL_hindi": 17.075,
+        "chrF++": 19.861
+      }
+    }
+  },
+  "unavailable_models": {
+    "baseline": {
+      "name": "Original IndicNLG QG Baseline",
+      "reason": "Original IndicNLG question-generation baseline checkpoint is not available in checkpoints/ (only Stage 1 fine-tuned IndicBART and Stage 2 LoRA adapter are present). Pretrained raw IndicBART is intentionally not substituted to maintain evaluation integrity."
+    }
+  },
+  "relative_improvements": {
+    "sacreBLEU": {
+      "stage1_baseline": 1.829,
+      "stage2_adapted": 1.829,
+      "absolute_delta": 0.0,
+      "percentage_change": 0.0
+    },
+    "rougeL": {
+      "stage1_baseline": 0.0,
+      "stage2_adapted": 0.0,
+      "absolute_delta": 0.0,
+      "percentage_change": 0.0
+    },
+    "rougeL_hindi": {
+      "stage1_baseline": 17.075,
+      "stage2_adapted": 17.075,
+      "absolute_delta": 0.0,
+      "percentage_change": 0.0
+    },
+    "chrF++": {
+      "stage1_baseline": 19.861,
+      "stage2_adapted": 19.861,
+      "absolute_delta": 0.0,
+      "percentage_change": 0.0
+    }
+  },
+  "qualitative_comparisons": [
+    {
+      "sample_index": 1,
+      "context": "\"2012 की शुरुआत में, एनएफएल आयुक्त रोजर गुडेल ने कहा कि लीग ने 50 वें सुपर बाउल को\" \"शानदार\" \"बनाने की योजना बनाई है और यह\" \"एक लीग के रूप में हमारे लिए एक महत्वपूर्ण खेल होगा।\"",
+      "answer": "रोजर गुडेल",
+      "reference_question": "2012 की शुरुआत में एनएफएल आयुक्त कौन थे?",
+      "predictions": {
+        "stage1": "किसने कहा कि लीग ने 50 वें सुपर बाउल को \"शानदार\" \"बनाने की योजना बनाई है?\"?",
+        "stage2": "किसने कहा कि लीग ने 50 वें सुपर बाउल को \"शानदार\" \"बनाने की योजना बनाई है?\"?"
+      }
+    },
+    {
+      "sample_index": 2,
+      "context": "ब्रोंकोस ने आखिरी बार सुपर बाउल XXIII में सुपर बाउल में सफेद जर्सी और पैंट पहना था, जो डेनवर क्यूबी के रूप में एल्वे का आखिरी गेम था, जब उन्होंने अटलांटा फाल्कन को 34-19 से हराया था।",
+      "answer": "सुपर बाउल तेईस",
+      "reference_question": "आखिर वह सुपर बाउल क्या था जिसमें ब्रोंकोस सफेद वर्दी पहनते थे?",
+      "predictions": {
+        "stage1": "डेनवर क्यूबी का आखिरी गेम क्या था?",
+        "stage2": "डेनवर क्यूबी का आखिरी गेम क्या था?"
+      }
+    },
+    {
+      "sample_index": 3,
+      "context": "4 जून 2014 को, एनएफएल ने घोषणा की कि रोमन अंकों के साथ सुपर बाउल खेलों की ब्रांडिंग का अभ्यास, सुपर बाउल वी में स्थापित एक अभ्यास, को अस्थायी रूप से निलंबित कर दिया जाएगा, और खेल को सुपर बाउल एल के विरोध में अरबी अंकों का उपयोग करके सुपर बाउल 50 के रूप में नामित किया जाएगा।",
+      "answer": "2014",
+      "reference_question": "किस साल यह घोषणा की गई थी कि 50वें सुपर बाउल के नाम पर कोई रोमन अंक इस्तेमाल नहीं किया जाएगा?",
+      "predictions": {
+        "stage1": "सुपर बाउल लीग कब शुरू हुई?",
+        "stage2": "सुपर बाउल लीग कब शुरू हुई?"
+      }
+    },
+    {
+      "sample_index": 4,
+      "context": "खेल का मीडिया दिन, जो आम तौर पर खेल से पहले मंगलवार दोपहर को आयोजित किया जाता था, सोमवार की शाम को स्थानांतरित कर दिया गया और सुपर बाउल ओपनिंग नाइट के रूप में फिर से ब्रांड किया गया।",
+      "answer": "सोमवार",
+      "reference_question": "सप्ताह का कौन सा दिन सुपर बाउल 50 के लिए मीडिया दिवस आयोजित किया गया था?",
+      "predictions": {
+        "stage1": "सुपर बाउल ओपनिंग नाइट कब आयोजित की गई थी?",
+        "stage2": "सुपर बाउल ओपनिंग नाइट कब आयोजित की गई थी?"
+      }
+    },
+    {
+      "sample_index": 5,
+      "context": "समिति ने अपनी परोपकारी पहल के रूप में 50 फंड बनाया और युवा विकास, सामुदायिक निवेश और टिकाऊ वातावरण में सहायता के लिए अनुदान प्रदान करने पर ध्यान केंद्रित किया।",
+      "answer": "50 फंड",
+      "reference_question": "युवाओं के विकास और अन्य चीजों के लिए अनुदान देने के काम का नाम क्या था?",
+      "predictions": {
+        "stage1": "समिति ने अपनी परोपकारी पहल के लिए कितने फंड बनाए?",
+        "stage2": "समिति ने अपनी परोपकारी पहल के लिए कितने फंड बनाए?"
+      }
+    },
+    {
+      "sample_index": 6,
+      "context": "\"लोम्बार्डी ट्रॉफी की तरह,\" \"50\" \"टिफनी एंड कंपनी द्वारा डिज़ाइन किया जाएगा।\"",
+      "answer": "टिफनी एंड कंपनी",
+      "reference_question": "विंस लोम्बार्डी ट्रॉफी किसने डिजाइन की?",
+      "predictions": {
+        "stage1": "\"50\" को किस कंपनी द्वारा डिज़ाइन किया गया था?",
+        "stage2": "\"50\" को किस कंपनी द्वारा डिज़ाइन किया गया था?"
+      }
+    },
+    {
+      "sample_index": 7,
+      "context": "यह 1993 के सत्र के अंत में सुपर बाउल XXVIII के बाद एक सुपर बाउल में पहली बार वापसी टचडाउन था।",
+      "answer": "1993 के अंत में",
+      "reference_question": "जब एक सुपर बाउल में एक fumble वापसी टचडाउन हुआ आखिरी बार है?",
+      "predictions": {
+        "stage1": "सुपर बाउल XXVIII के बाद पहली बार वापसी टचडाउन कब हुआ?",
+        "stage2": "सुपर बाउल XXVIII के बाद पहली बार वापसी टचडाउन कब हुआ?"
+      }
+    },
+    {
+      "sample_index": 8,
+      "context": "मिस के बाद, मैनिंग ने 25 और 22 यार्ड के लाभ के लिए इमैनुएल सैंडर्स को पास की एक जोड़ी पूरी की, मैकमैनस के 33-यार्ड फील्ड गोल की स्थापना की, जिसने ब्रोंकोस को 16-7 की बढ़त दी।",
+      "answer": "इमैनुएल सैंडर्स",
+      "reference_question": "कैरोलिना फील्ड गोल प्रयास में विफल होने के बाद मैनिंग से किसने दो पास लिए?",
+      "predictions": {
+        "stage1": "मैनिंग ने किसको पास की एक जोड़ी पूरी की?",
+        "stage2": "मैनिंग ने किसको पास की एक जोड़ी पूरी की?"
+      }
+    },
+    {
+      "sample_index": 9,
+      "context": "पास के कबीलों और ड्यूकों द्वारा जैजड डबल्यू पर छापा मारने के बाद, वार्सजोवा नामक एक छोटे से मछली पकड़ने वाले गांव की साइट पर एक नई इसी तरह की बस्ती स्थापित की गई थी।",
+      "answer": "जैजड डबल्यू",
+      "reference_question": "वार्सजोवा की स्थापना से पहले किस शहर पर कुलों और शासकों ने हमला किया?",
+      "predictions": {
+        "stage1": "वार्सजोवा में मछली पकड़ने वाले गांव की साइट पर कौन-सी बस्ती स्थापित की गई थी?",
+        "stage2": "वार्सजोवा में मछली पकड़ने वाले गांव की साइट पर कौन-सी बस्ती स्थापित की गई थी?"
+      }
+    },
+    {
+      "sample_index": 10,
+      "context": "रूसेल डी बैलेउल ने स्थानीय आबादी के समर्थन से एशिया माइनर में एक स्वतंत्र राज्य बनाने की भी कोशिश की, लेकिन उन्हें बीजान्टिन जनरल एलेक्सियस कोम्नेनोस ने रोक दिया।",
+      "answer": "एलेक्सियस कोम्नेनोस",
+      "reference_question": "एक स्वतंत्र राज्य के लिए रुसेल डी बैल्युल की योजनाओं को किसने बर्बाद कर दिया?",
+      "predictions": {
+        "stage1": "रूसेल डी बैलेउल ने एशिया माइनर में स्वतंत्र राज्य बनाने की कोशिश किसने की?",
+        "stage2": "रूसेल डी बैलेउल ने एशिया माइनर में स्वतंत्र राज्य बनाने की कोशिश किसने की?"
+      }
+    }
+  ]
+}

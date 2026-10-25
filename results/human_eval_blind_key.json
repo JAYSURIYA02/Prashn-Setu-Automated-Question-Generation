@@ -1,0 +1,46 @@
+{
+  "description": "Blinded key mapping for human evaluation. Keep hidden from raters during scoring.",
+  "created_at": "2026-10-25T12:16:28.654024+00:00",
+  "mappings": {
+    "EVAL_001": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_002": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_003": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_004": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_005": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_006": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_007": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_008": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_009": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_010": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    }
+  }
+}

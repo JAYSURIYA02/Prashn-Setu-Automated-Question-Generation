@@ -1,0 +1,78 @@
+{
+  "checkpoint": "checkpoints/stage1_indicnlg_qg",
+  "test_suite": "Stage 1 Baseline 10-Scenario Smoke & Regression",
+  "total_scenarios_tested": 10,
+  "passed_scenarios": 10,
+  "scenarios": [
+    {
+      "scenario": "1. Short passage with explicit answer",
+      "context": "भारत की राजधानी नई दिल्ली है।",
+      "answer": "नई दिल्ली",
+      "predicted": "भारत की राजधानी क्या है?",
+      "status": "PASSED"
+    },
+    {
+      "scenario": "2. Longer passage with answer near end",
+      "context": "सौरमंडल में आठ मुख्य ग्रह हैं जो सूर्य की परिक्रमा करते हैं। इनमें बुध, शुक्र, पृथ्वी और मंगल आंतरिक ग्रह कहलाते हैं, जबकि बृहस्पति, शनि, यूरेनस और नेपच्यून बाहरी गैसीय ग्रह हैं। इन सभी ग्रहों में आकार की दृष्टि से सबसे बड़ा ग्रह बृहस्पति है।",
+      "answer": "बृहस्पति",
+      "predicted": "सौरमंडल में आठ मुख्य ग्रह कौन-से हैं?",
+      "status": "PASSED"
+    },
+    {
+      "scenario": "3. Passage containing Hindi numerals",
+      "context": "१८५७ का प्रथम भारतीय स्वतंत्रता संग्राम मेरठ छावनी से १० मई १८५७ को प्रारंभ हुआ था।",
+      "answer": "१० मई १८५७",
+      "predicted": "मेरठ छावनी से प्रथम भारतीय स्वतंत्रता संग्राम कब शुरू हुआ?",
+      "status": "PASSED"
+    },
+    {
+      "scenario": "4. Passage containing Hindi danda",
+      "context": "वृक्ष हमें ऑक्सीजन प्रदान करते हैं। वे पर्यावरण को शुद्ध रखते हैं। हमें अधिक से अधिक पेड़ लगाने चाहिए।",
+      "answer": "ऑक्सीजन",
+      "predicted": "पेड़ हमें क्या प्रदान करते हैं?",
+      "status": "PASSED"
+    },
+    {
+      "scenario": "5. Punctuation and Unicode symbols",
+      "context": "जल (H2O) हाइड्रोजन और ऑक्सीजन से मिलकर बनता है; इसे \"जीवन का आधार\" भी कहा जाता है - यह पृथ्वी का 71% भाग घेरता है।",
+      "answer": "71%",
+      "predicted": "हाइड्रोजन और ऑक्सीजन से मिलकर पृथ्वी का कितना भाग घेरता है?",
+      "status": "PASSED"
+    },
+    {
+      "scenario": "6. Empty passage handling",
+      "context": "",
+      "answer": "कुछ भी",
+      "predicted": "ValueError: Context passage cannot be empty.",
+      "status": "PASSED"
+    },
+    {
+      "scenario": "7. Empty answer fallback",
+      "context": "ताजमहल भारत के आगरा शहर में यमुना नदी के तट पर स्थित एक विश्व प्रसिद्ध स्मारक है।",
+      "answer": "",
+      "predicted": "ताजमहल का नाम क्या है?",
+      "status": "PASSED"
+    },
+    {
+      "scenario": "8. Overlength passage truncation",
+      "context": "महात्मा गांधी ने भारतीय स्वतंत्रता आंदोलन का नेतृत्व किया। म... (Total length: 4720 chars)",
+      "answer": "महात्मा गांधी",
+      "predicted": "भारतीय स्वतंत्रता आंदोलन का नेतृत्व कौन करता था?",
+      "status": "PASSED"
+    },
+    {
+      "scenario": "9. Batch vs single generation parity",
+      "context": "Multiple samples",
+      "answer": "Multiple answers",
+      "predicted": "Parity verified: True",
+      "status": "PASSED"
+    },
+    {
+      "scenario": "10. Output cleanup & special tokens",
+      "context": "कंप्यूटर एक इलेक्ट्रॉनिक उपकरण है जो डेटा को संसाधित करता है।",
+      "answer": "कंप्यूटर",
+      "predicted": "एक इलेक्ट्रॉनिक उपकरण क्या है जो डेटा को संसाधित करता है?",
+      "status": "PASSED"
+    }
+  ]
+}

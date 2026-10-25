@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+"""
+Prashn-Setu Unified Execution Command Center.
+Provides single-entry-point CLI to run inference, interactive sessions, and the web demo.
+
+Usage:
+  python run.py infer                 # Launch interactive terminal question generator
+  python run.py demo                  # Launch interactive web demo server (default: port 7860)
+  python run.py evaluate              # Benchmark checkpoint on test data
+"""
+
+import sys
+import os
+import argparse
+
+# Ensure src/ is accessible from root
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+def cmd_infer(args):
+    from src.evaluation.inference import QuestionGenerator, interactive_session
+    generator = QuestionGenerator(checkpoint_path=args.checkpoint)
+    interactive_session(generator)
+
+def cmd_demo(args):
+    from src.demo.app import run_demo_server
+    run_demo_server(
+        checkpoint_path=args.checkpoint,
+        host=args.host,
+        port=args.port
+    )
+
+def cmd_evaluate(args):
+    from src.evaluation.evaluate import evaluate_checkpoint
+    evaluate_checkpoint(
+        checkpoint_path=args.checkpoint,
+        test_data_path=args.test_data,
+        output_report_path=args.output,
+        max_eval_samples=args.max_samples if args.max_samples > 0 else None,
+        batch_size=args.batch_size
+    )
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Prashn-Setu: IndicBART Question Generation Execution Center",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__
+    )
+    subparsers = parser.add_subparsers(dest="command", help="Available execution subcommands")
+
+    default_checkpoint = (
+        "checkpoints/stage2_ncert_gold_lora"
+        if os.path.exists("checkpoints/stage2_ncert_gold_lora")
+        else "checkpoints/stage1_indicnlg_qg"
+    )
+
+    # 1. Infer
+    p_infer = subparsers.add_parser("infer", help="Launch interactive generation CLI")
+    p_infer.add_argument("--checkpoint", type=str, default=default_checkpoint, help="Checkpoint path to load")
+    p_infer.set_defaults(func=cmd_infer)
+
+    # 2. Web Demo
+    p_demo = subparsers.add_parser("demo", help="Launch interactive browser demonstration server")
+    p_demo.add_argument("--checkpoint", type=str, default=default_checkpoint, help="Checkpoint path to load")
+    p_demo.add_argument("--host", type=str, default="0.0.0.0", help="Host address to bind")
+    p_demo.add_argument("--port", type=int, default=7860, help="Port to listen on (default 7860)")
+    p_demo.set_defaults(func=cmd_demo)
+
+    # 3. Evaluate
+    p_eval = subparsers.add_parser("evaluate", help="Benchmark checkpoint on test dataset")
+    p_eval.add_argument("--checkpoint", type=str, default=default_checkpoint, help="Checkpoint path to load")
+    p_eval.add_argument("--test_data", type=str, default=None, help="Path to test JSONL file")
+    p_eval.add_argument("--output", type=str, default="eval_results.json", help="Output JSON results file")
+    p_eval.add_argument("--max_samples", type=int, default=100, help="Max test samples (0 for all)")
+    p_eval.add_argument("--batch_size", type=int, default=32, help="Inference batch size")
+    p_eval.set_defaults(func=cmd_evaluate)
+
+    args = parser.parse_args()
+    if not hasattr(args, "func"):
+        parser.print_help()
+        sys.exit(1)
+
+    args.func(args)
+
+if __name__ == "__main__":
+    main()

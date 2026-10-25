@@ -1,0 +1,31 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Large model weights (>100MB GitHub limit)
+# Stage 1 base model (~932MB) - too large for GitHub
+checkpoints/stage1_indicnlg_qg/model.safetensors
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary / Generated
+*.log
+*.tmp
+eval_results.json

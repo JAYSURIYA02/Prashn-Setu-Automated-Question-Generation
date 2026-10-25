@@ -1,0 +1,249 @@
+{
+  "annotator_1": {
+    "annotator_name": "Annotator 1",
+    "total_examples": 25,
+    "completed_annotations": 25,
+    "completion_rate_pct": 100.0,
+    "metrics": {
+      "answer_alignment_1to5": {
+        "label": "Answer Alignment",
+        "count": 25,
+        "mean": 4.04,
+        "std": 0.79,
+        "median": 4.0,
+        "min": 3,
+        "max": 5,
+        "score_distribution": {
+          "4": 10,
+          "5": 8,
+          "3": 7
+        },
+        "pct_high_quality_4_or_5": 72.0
+      },
+      "context_faithfulness_1to5": {
+        "label": "Context Faithfulness",
+        "count": 25,
+        "mean": 4.12,
+        "std": 0.726,
+        "median": 4.0,
+        "min": 3,
+        "max": 5,
+        "score_distribution": {
+          "4": 12,
+          "5": 8,
+          "3": 5
+        },
+        "pct_high_quality_4_or_5": 80.0
+      },
+      "grammaticality_1to5": {
+        "label": "Grammaticality & Naturalness",
+        "count": 25,
+        "mean": 4.64,
+        "std": 0.49,
+        "median": 5.0,
+        "min": 4,
+        "max": 5,
+        "score_distribution": {
+          "5": 16,
+          "4": 9
+        },
+        "pct_high_quality_4_or_5": 100.0
+      },
+      "answerability_1to5": {
+        "label": "Answerability",
+        "count": 25,
+        "mean": 4.16,
+        "std": 0.8,
+        "median": 4.0,
+        "min": 3,
+        "max": 5,
+        "score_distribution": {
+          "5": 10,
+          "4": 9,
+          "3": 6
+        },
+        "pct_high_quality_4_or_5": 76.0
+      },
+      "overall_quality_1to5": {
+        "label": "Overall Pedagogical Quality",
+        "count": 25,
+        "mean": 4.0,
+        "std": 0.645,
+        "median": 4.0,
+        "min": 3,
+        "max": 5,
+        "score_distribution": {
+          "4": 15,
+          "5": 5,
+          "3": 5
+        },
+        "pct_high_quality_4_or_5": 80.0
+      }
+    },
+    "status": "POPULATED",
+    "hallucination": {
+      "evaluated_count": 25,
+      "hallucination_count": 4,
+      "clean_count": 21,
+      "hallucination_rate_pct": 16.0,
+      "faithfulness_rate_pct": 84.0
+    }
+  },
+  "annotator_2": {
+    "annotator_name": "Annotator 2",
+    "total_examples": 25,
+    "completed_annotations": 25,
+    "completion_rate_pct": 100.0,
+    "metrics": {
+      "answer_alignment_1to5": {
+        "label": "Answer Alignment",
+        "count": 25,
+        "mean": 3.96,
+        "std": 0.935,
+        "median": 4.0,
+        "min": 2,
+        "max": 5,
+        "score_distribution": {
+          "5": 9,
+          "3": 8,
+          "4": 7,
+          "2": 1
+        },
+        "pct_high_quality_4_or_5": 64.0
+      },
+      "context_faithfulness_1to5": {
+        "label": "Context Faithfulness",
+        "count": 25,
+        "mean": 4.04,
+        "std": 0.841,
+        "median": 4.0,
+        "min": 2,
+        "max": 5,
+        "score_distribution": {
+          "4": 11,
+          "5": 8,
+          "3": 5,
+          "2": 1
+        },
+        "pct_high_quality_4_or_5": 76.0
+      },
+      "grammaticality_1to5": {
+        "label": "Grammaticality & Naturalness",
+        "count": 25,
+        "mean": 4.56,
+        "std": 0.583,
+        "median": 5.0,
+        "min": 3,
+        "max": 5,
+        "score_distribution": {
+          "5": 15,
+          "4": 9,
+          "3": 1
+        },
+        "pct_high_quality_4_or_5": 96.0
+      },
+      "answerability_1to5": {
+        "label": "Answerability",
+        "count": 25,
+        "mean": 4.08,
+        "std": 0.862,
+        "median": 4.0,
+        "min": 2,
+        "max": 5,
+        "score_distribution": {
+          "4": 10,
+          "5": 9,
+          "3": 5,
+          "2": 1
+        },
+        "pct_high_quality_4_or_5": 76.0
+      },
+      "overall_quality_1to5": {
+        "label": "Overall Pedagogical Quality",
+        "count": 25,
+        "mean": 3.88,
+        "std": 0.666,
+        "median": 4.0,
+        "min": 3,
+        "max": 5,
+        "score_distribution": {
+          "4": 14,
+          "3": 7,
+          "5": 4
+        },
+        "pct_high_quality_4_or_5": 72.0
+      }
+    },
+    "status": "POPULATED",
+    "hallucination": {
+      "evaluated_count": 25,
+      "hallucination_count": 8,
+      "clean_count": 17,
+      "hallucination_rate_pct": 32.0,
+      "faithfulness_rate_pct": 68.0
+    }
+  },
+  "inter_annotator_agreement": {
+    "annotator_1": "Annotator 1",
+    "annotator_2": "Annotator 2",
+    "paired_samples_total": 25,
+    "metrics": {
+      "answer_alignment_1to5": {
+        "label": "Answer Alignment",
+        "n_pairs": 25,
+        "exact_agreement_pct": 76.0,
+        "within_1_point_agreement_pct": 100.0,
+        "quadratic_weighted_kappa": 0.834,
+        "linear_weighted_kappa": 0.741,
+        "unweighted_kappa": 0.649,
+        "pearson_r": 0.849
+      },
+      "context_faithfulness_1to5": {
+        "label": "Context Faithfulness",
+        "n_pairs": 25,
+        "exact_agreement_pct": 92.0,
+        "within_1_point_agreement_pct": 100.0,
+        "quadratic_weighted_kappa": 0.933,
+        "linear_weighted_kappa": 0.902,
+        "unweighted_kappa": 0.876,
+        "pearson_r": 0.948
+      },
+      "grammaticality_1to5": {
+        "label": "Grammaticality & Naturalness",
+        "n_pairs": 25,
+        "exact_agreement_pct": 84.0,
+        "within_1_point_agreement_pct": 100.0,
+        "quadratic_weighted_kappa": 0.716,
+        "linear_weighted_kappa": 0.688,
+        "unweighted_kappa": 0.671,
+        "pearson_r": 0.735
+      },
+      "answerability_1to5": {
+        "label": "Answerability",
+        "n_pairs": 25,
+        "exact_agreement_pct": 92.0,
+        "within_1_point_agreement_pct": 100.0,
+        "quadratic_weighted_kappa": 0.94,
+        "linear_weighted_kappa": 0.909,
+        "unweighted_kappa": 0.88,
+        "pearson_r": 0.947
+      },
+      "overall_quality_1to5": {
+        "label": "Overall Pedagogical Quality",
+        "n_pairs": 25,
+        "exact_agreement_pct": 88.0,
+        "within_1_point_agreement_pct": 100.0,
+        "quadratic_weighted_kappa": 0.857,
+        "linear_weighted_kappa": 0.819,
+        "unweighted_kappa": 0.792,
+        "pearson_r": 0.873
+      }
+    },
+    "hallucination_agreement": {
+      "n_pairs": 25,
+      "exact_agreement_pct": 84.0,
+      "cohen_kappa": 0.576
+    },
+    "status": "COMPUTED"
+  }
+}

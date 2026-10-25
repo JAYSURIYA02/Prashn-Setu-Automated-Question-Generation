@@ -245,16 +245,52 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             background: #dbeafe;
             border-color: #93c5fd;
         }
-        /* Checkbox selector group */
+        /* Checkbox selector group & cards */
         .model-select-group {
             display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
+            flex-direction: column;
+            gap: 10px;
             margin-bottom: 16px;
-            padding: 12px 14px;
-            background: #f8fafc;
+        }
+        .model-selection-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .select-all-btn {
+            background: #eff6ff;
+            color: var(--primary);
+            border: 1px solid #bfdbfe;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .select-all-btn:hover {
+            background: #dbeafe;
+            border-color: #93c5fd;
+        }
+        .model-checkbox-card {
             border: 1px solid var(--border);
             border-radius: 8px;
+            padding: 10px 14px;
+            background: #ffffff;
+            transition: all 0.15s ease;
+        }
+        .model-checkbox-card:hover {
+            border-color: #cbd5e1;
+        }
+        .model-checkbox-card.unavailable-card {
+            background: #fffbeb;
+            border-color: #fde68a;
         }
         .model-checkbox-item {
             display: flex;
@@ -263,18 +299,33 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             font-size: 13.5px;
             font-weight: 500;
             cursor: pointer;
-            padding: 6px 10px;
             border-radius: 6px;
             transition: background 0.15s;
         }
-        .model-checkbox-item:hover {
-            background: #f1f5f9;
+        .model-checkbox-item.disabled {
+            cursor: not-allowed;
+            opacity: 0.85;
         }
         .model-checkbox-item input[type="checkbox"] {
             width: 17px;
             height: 17px;
             accent-color: var(--primary);
             cursor: pointer;
+        }
+        .model-checkbox-item input[type="checkbox"]:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .model-unavailable-note {
+            margin-top: 8px;
+            margin-left: 27px;
+            font-size: 12px;
+            line-height: 1.45;
+            color: #92400e;
+            background: #fef3c7;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border-left: 3px solid #d97706;
         }
         .model-pill {
             display: inline-block;
@@ -637,23 +688,61 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
                     <!-- Model Selection Checkboxes -->
                     <div class="form-group">
-                        <label>तुलना हेतु मॉडल चुनें (Select Models to Compare) *</label>
-                        <div class="model-select-group">
-                            <label class="model-checkbox-item">
-                                <input type="checkbox" id="chkStage1" value="stage1" checked>
-                                <span>स्टेज १: इंडिकबार्ट बेसलाइन (Stage 1)</span>
-                                <span class="model-pill" style="background:#0d6efd;">Base</span>
-                            </label>
-                            <label class="model-checkbox-item">
-                                <input type="checkbox" id="chkStage2" value="stage2" checked>
-                                <span>स्टेज २: एनसीईआरटी अनुकूलित (Stage 2 LoRA)</span>
-                                <span class="model-pill" style="background:#198754;">LoRA Adapted</span>
-                            </label>
-                            <label class="model-checkbox-item">
-                                <input type="checkbox" id="chkBaseline" value="baseline">
-                                <span>मूल इंडिक-एनएलजी बेसलाइन (Original IndicNLG)</span>
-                                <span class="model-pill" style="background:#6c757d;">Unavailable</span>
-                            </label>
+                        <div class="model-selection-header">
+                            <label style="font-weight: 600; margin-bottom: 0;">तुलना हेतु मॉडल चुनें (Select Models to Compare) *</label>
+                            <button type="button" class="select-all-btn" id="btnSelectAllAvailable" onclick="selectAllAvailableModels()">
+                                ✅ सभी उपलब्ध मॉडल चुनें (Select All Available Models)
+                            </button>
+                        </div>
+                        <div id="modelSelectGroup" class="model-select-group">
+                            <div class="model-checkbox-card" id="card_stage1">
+                                <label class="model-checkbox-item" style="margin:0; width:100%; display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        <input type="checkbox" id="chkStage1" value="stage1" class="model-checkbox" checked>
+                                        <div>
+                                            <span style="font-weight:600;">स्टेज १: इंडिकबार्ट + इंडिक-एनएलजी</span>
+                                            <span style="font-size:12px; color:var(--text-muted); margin-left:6px;">(Stage 1)</span>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span class="model-pill" style="background:#0d6efd;">Stage 1</span>
+                                        <span class="model-pill" style="background:#16a34a;">उपलब्ध (Available)</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="model-checkbox-card" id="card_stage2">
+                                <label class="model-checkbox-item" style="margin:0; width:100%; display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        <input type="checkbox" id="chkStage2" value="stage2" class="model-checkbox" checked>
+                                        <div>
+                                            <span style="font-weight:600;">स्टेज २: एनसीईआरटी अनुकूलित (LoRA)</span>
+                                            <span style="font-size:12px; color:var(--text-muted); margin-left:6px;">(Stage 2 Adapted)</span>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span class="model-pill" style="background:#198754;">Stage 2 (Adapted)</span>
+                                        <span class="model-pill" style="background:#16a34a;">उपलब्ध (Available)</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="model-checkbox-card unavailable-card" id="card_baseline">
+                                <label class="model-checkbox-item disabled" style="margin:0; width:100%; display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        <input type="checkbox" id="chkBaseline" value="baseline" class="model-checkbox" disabled>
+                                        <div>
+                                            <span style="font-weight:600; color:#64748b;">मूल इंडिक-एनएलजी बेसलाइन</span>
+                                            <span style="font-size:12px; color:var(--text-muted); margin-left:6px;">(Original IndicNLG QG Baseline)</span>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span class="model-pill" style="background:#6c757d;">Baseline</span>
+                                        <span class="model-pill" style="background:#dc2626;">अनुपलब्ध (Unavailable)</span>
+                                    </div>
+                                </label>
+                                <div class="model-unavailable-note" id="baselineUnavailableNote">
+                                    <strong>⚠️ अनुपलब्ध रहने का कारण (Cannot Run):</strong> Original IndicNLG question-generation baseline checkpoint is not available in checkpoints/ (only Stage 1 fine-tuned IndicBART and Stage 2 LoRA adapter are present). Pretrained raw IndicBART is intentionally not substituted to maintain evaluation integrity.
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -810,6 +899,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         const PRESETS = __PRESETS_JSON__;
         let LATEST_COMPARISON_DATA = null;
         let SINGLE_CURRENT_QUESTIONS = [];
+        let MODEL_REGISTRY = null;
 
         function safeInt(id, fallback) {
             const el = document.getElementById(id);
@@ -824,6 +914,124 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             return isNaN(v) ? fallback : v;
         }
 
+        async function loadModelRegistry() {
+            try {
+                const resp = await fetch('/api/models');
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                MODEL_REGISTRY = await resp.json();
+                renderModelSelectionCheckboxes(MODEL_REGISTRY);
+            } catch (err) {
+                console.warn('Could not load dynamic model registry:', err);
+            }
+        }
+
+        function renderModelSelectionCheckboxes(registry) {
+            const container = document.getElementById('modelSelectGroup');
+            if (!container || !registry) return;
+
+            // Preserve user-selected state for available models if already interacted with
+            const previousState = {};
+            const existingInputs = container.querySelectorAll('input[type="checkbox"]');
+            existingInputs.forEach(cb => {
+                previousState[cb.value] = cb.checked;
+            });
+
+            container.innerHTML = '';
+
+            // Preferred order: stage1, stage2, baseline, then any other models
+            const preferredOrder = ['stage1', 'stage2', 'baseline'];
+            const allKeys = Object.keys(registry);
+            const orderedKeys = [
+                ...preferredOrder.filter(k => allKeys.includes(k)),
+                ...allKeys.filter(k => !preferredOrder.includes(k))
+            ];
+
+            const stage1Avail = registry['stage1'] && registry['stage1'].status === 'available';
+            const stage2Avail = registry['stage2'] && registry['stage2'].status === 'available';
+
+            orderedKeys.forEach(mid => {
+                const info = registry[mid];
+                const isAvailable = info.status === 'available';
+
+                // Requirement 2: Automatically deselect unavailable models
+                // Requirement 3: Default to selecting Stage 1 and Stage 2 when both are available
+                let isChecked = false;
+                if (isAvailable) {
+                    if (existingInputs.length > 0 && previousState.hasOwnProperty(mid)) {
+                        isChecked = previousState[mid];
+                    } else if (mid === 'stage1' || mid === 'stage2') {
+                        isChecked = true;
+                    } else if (!stage1Avail && !stage2Avail) {
+                        isChecked = true;
+                    }
+                } else {
+                    isChecked = false;
+                }
+
+                let chkId = 'chk_' + mid;
+                if (mid === 'stage1') chkId = 'chkStage1';
+                else if (mid === 'stage2') chkId = 'chkStage2';
+                else if (mid === 'baseline') chkId = 'chkBaseline';
+
+                const card = document.createElement('div');
+                card.className = `model-checkbox-card ${isAvailable ? '' : 'unavailable-card'}`;
+                card.id = `card_${mid}`;
+
+                const badgeBg = info.badge_color || (mid === 'stage1' ? '#0d6efd' : mid === 'stage2' ? '#198754' : '#6c757d');
+                const tagLabel = info.tag || (mid === 'stage1' ? 'Base' : mid === 'stage2' ? 'LoRA Adapted' : 'Baseline');
+                const statusPill = isAvailable
+                    ? '<span class="model-pill" style="background:#16a34a;">उपलब्ध (Available)</span>'
+                    : '<span class="model-pill" style="background:#dc2626;">अनुपलब्ध (Unavailable)</span>';
+
+                let explanationHtml = '';
+                if (!isAvailable) {
+                    // Requirement 4: Add clear explanation next to unavailable models, including reason they cannot run
+                    const reason = info.unavailable_reason || 'चेकपॉइंट डिस्क पर उपलब्ध नहीं है।';
+                    explanationHtml = `
+                        <div class="model-unavailable-note">
+                            <strong>⚠️ अनुपलब्ध रहने का कारण (Cannot Run):</strong> ${escapeHtml(reason)}
+                        </div>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <label class="model-checkbox-item ${isAvailable ? '' : 'disabled'}" style="margin:0; width:100%; display:flex; justify-content:space-between; align-items:center;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <input type="checkbox" id="${chkId}" value="${mid}" class="model-checkbox"
+                                   ${isChecked ? 'checked' : ''} ${isAvailable ? '' : 'disabled'}>
+                            <div>
+                                <span style="font-weight:600; color:${isAvailable ? 'var(--text)' : '#64748b'};">
+                                    ${escapeHtml(info.name_hi || info.name)}
+                                </span>
+                                <span style="font-size:12px; color:var(--text-muted); margin-left:6px;">
+                                    (${escapeHtml(info.name)})
+                                </span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:6px;">
+                            <span class="model-pill" style="background:${badgeBg};">${escapeHtml(tagLabel)}</span>
+                            ${statusPill}
+                        </div>
+                    </label>
+                    ${explanationHtml}
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Requirement 5: Add a "Select All Available Models" control that selects only available models
+        function selectAllAvailableModels() {
+            const checkboxes = document.querySelectorAll('#modelSelectGroup input[type="checkbox"]');
+            checkboxes.forEach(cb => {
+                if (!cb.disabled) {
+                    cb.checked = true;
+                } else {
+                    cb.checked = false;
+                }
+            });
+        }
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -834,6 +1042,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             } else if (tabId === 'compare') {
                 document.getElementById('tabBtnCompare').classList.add('active');
                 document.getElementById('tabCompare').classList.add('active');
+                loadModelRegistry();
             } else if (tabId === 'benchmark') {
                 document.getElementById('tabBtnBenchmark').classList.add('active');
                 document.getElementById('tabBenchmark').classList.add('active');
@@ -845,6 +1054,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         window.addEventListener('DOMContentLoaded', () => {
             renderPresets('singlePresetContainer', 'singleContextInput', 'singleAnswerInput');
             renderPresets('comparePresetContainer', 'compareContextInput', 'compareAnswerInput');
+            loadModelRegistry();
 
             if (PRESETS && PRESETS.length > 0) {
                 document.getElementById('singleContextInput').value = PRESETS[0].context;
@@ -983,9 +1193,21 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             const topP = isSampling ? safeFloat('compareTopP', 0.92) : 1.0;
 
             const selectedModels = [];
-            if (document.getElementById('chkStage1').checked) selectedModels.push('stage1');
-            if (document.getElementById('chkStage2').checked) selectedModels.push('stage2');
-            if (document.getElementById('chkBaseline').checked) selectedModels.push('baseline');
+            const checkboxes = document.querySelectorAll('#modelSelectGroup input[type="checkbox"]');
+            if (checkboxes.length > 0) {
+                checkboxes.forEach(cb => {
+                    if (cb.checked && !cb.disabled) {
+                        selectedModels.push(cb.value);
+                    }
+                });
+            } else {
+                const chk1 = document.getElementById('chkStage1');
+                const chk2 = document.getElementById('chkStage2');
+                const chkB = document.getElementById('chkBaseline');
+                if (chk1 && chk1.checked && !chk1.disabled) selectedModels.push('stage1');
+                if (chk2 && chk2.checked && !chk2.disabled) selectedModels.push('stage2');
+                if (chkB && chkB.checked && !chkB.disabled) selectedModels.push('baseline');
+            }
 
             const errAlert = document.getElementById('compareErrorAlert');
             const warnAlert = document.getElementById('compareWarnAlert');
@@ -1000,7 +1222,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 return;
             }
             if (selectedModels.length === 0) {
-                errAlert.textContent = "कृपया तुलना के लिए कम से कम एक मॉडल चुनें।";
+                errAlert.textContent = "कृपया तुलना के लिए कम से कम एक उपलब्ध मॉडल चुनें (Please select at least one available model for comparison)।";
                 errAlert.style.display = 'block';
                 return;
             }

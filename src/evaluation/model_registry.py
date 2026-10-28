@@ -121,16 +121,98 @@ def get_model_registry() -> Dict[str, Dict[str, Any]]:
     return registry
 
 
+def verify_stage2_checkpoint() -> Dict[str, Any]:
+    """
+    Mandatory Stage 2 verification before inference or at startup.
+    Verifies that:
+      1. Stage 1 base checkpoint directory exists and contains valid model weights and config.
+      2. Stage 2 adapter directory exists and contains adapter_config.json and weights.
+      3. Adapter configuration is readable and specifies the compatible base model.
+      4. Returns structured status with explicit error details if unverified.
+    """
+    registry = get_model_registry()
+    stage1_info = registry[MODEL_STAGE1]
+    stage2_info = registry[MODEL_STAGE2]
+
+    stage1_dir = os.path.join(PROJECT_ROOT, "checkpoints", "stage1_indicnlg_qg")
+    stage2_dir = os.path.join(PROJECT_ROOT, "checkpoints", "stage2_ncert_gold_lora")
+
+    status = {
+        "verified": False,
+        "active_model": MODEL_STAGE2,
+        "stage1_available": stage1_info["status"] == "available",
+        "stage2_available": stage2_info["status"] == "available",
+        "stage1_dir": stage1_dir,
+        "stage2_dir": stage2_dir,
+        "adapter_config": None,
+        "adapter_active": False,
+        "errors": []
+    }
+
+    if not status["stage1_available"]:
+        status["errors"].append("Stage 1 base checkpoint is missing or incomplete in checkpoints/stage1_indicnlg_qg.")
+        return status
+
+    if not status["stage2_available"]:
+        status["errors"].append("Stage 2 LoRA adapter is missing or incomplete in checkpoints/stage2_ncert_gold_lora.")
+        return status
+
+    # Read and validate adapter config
+    adapter_cfg_file = os.path.join(stage2_dir, "adapter_config.json")
+    try:
+        with open(adapter_cfg_file, "r", encoding="utf-8") as f:
+            cfg = json.load(f)
+        status["adapter_config"] = {
+            "peft_type": cfg.get("peft_type"),
+            "r": cfg.get("r"),
+            "lora_alpha": cfg.get("lora_alpha"),
+            "target_modules": cfg.get("target_modules"),
+            "base_model": cfg.get("base_model_name_or_path")
+        }
+        status["verified"] = True
+    except Exception as e:
+        status["errors"].append(f"Failed to read adapter_config.json: {str(e)}")
+        return status
+
+    return status
+
+
 class ModelManager:
     """
     Manages model lifecycle, shared base weights, and LoRA adapter switching
     to support multi-model comparisons without redundant memory consumption.
+    Stage 2 (NCERT Gold LoRA) is the primary default model for all standard generation.
     """
 
     def __init__(self, device: Optional[str] = None):
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self._generator = None
         self._loaded_checkpoint = None
+
+    def verify_stage2(self) -> Dict[str, Any]:
+        """Verifies Stage 2 configuration and live generator adapter status."""
+        status = verify_stage2_checkpoint()
+        if self._generator is not None:
+            has_peft = hasattr(self._generator.model, "peft_config")
+            adapter_name = getattr(self._generator.model, "active_adapter", "default")
+            status["generator_loaded"] = True
+            status["adapter_active"] = bool(has_peft)
+            status["active_adapter_name"] = str(adapter_name)
+            status["device"] = str(self._generator.device)
+        else:
+            status["generator_loaded"] = False
+        return status
+
+    def get_active_model_status(self) -> Dict[str, Any]:
+        """Returns the real-time active generation model configuration."""
+        verification = self.verify_stage2()
+        return {
+            "active_model_id": MODEL_STAGE2 if verification["stage2_available"] else MODEL_STAGE1,
+            "active_model_name": "Stage 2: NCERT Curriculum Adapted (LoRA)" if verification["stage2_available"] else "Stage 1: IndicBART + IndicNLG QG",
+            "is_lora_active": bool(self._generator and hasattr(self._generator.model, "peft_config")),
+            "device": self.device,
+            "verification": verification
+        }
 
     def get_generator(self):
         """
@@ -149,6 +231,7 @@ class ModelManager:
                     device=self.device
                 )
                 self._loaded_checkpoint = MODEL_STAGE2
+                print(f"[ModelManager] Verified: Stage 2 LoRA adapter active and set as primary generation model.")
             elif registry[MODEL_STAGE1]["status"] == "available":
                 print(f"[ModelManager] Loading Stage 1 Base on {self.device}...")
                 self._generator = QuestionGenerator(

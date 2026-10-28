@@ -1,6 +1,6 @@
 {
   "description": "Blinded key mapping for human evaluation. Keep hidden from raters during scoring.",
-  "created_at": "2026-10-25T12:16:28.654024+00:00",
+  "created_at": "2026-10-28T12:26:39.175521+00:00",
   "mappings": {
     "EVAL_001": {
       "model_A": "stage2",
@@ -39,6 +39,166 @@
       "model_B": "stage2"
     },
     "EVAL_010": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_011": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_012": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_013": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_014": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_015": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_016": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_017": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_018": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_019": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_020": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_021": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_022": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_023": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_024": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_025": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_026": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_027": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_028": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_029": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_030": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_031": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_032": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_033": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_034": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_035": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_036": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_037": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_038": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_039": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_040": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_041": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_042": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_043": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_044": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_045": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_046": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_047": {
+      "model_A": "stage1",
+      "model_B": "stage2"
+    },
+    "EVAL_048": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_049": {
+      "model_A": "stage2",
+      "model_B": "stage1"
+    },
+    "EVAL_050": {
       "model_A": "stage2",
       "model_B": "stage1"
     }

@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "timestamp": "2026-10-25T12:15:41.318149+00:00",
-    "evaluated_sample_count": 10,
-    "test_dataset": "C:\\Users\\jaysu\\Downloads\\send\\send\\data\\hi_test.jsonl",
+    "timestamp": "2026-10-28T12:25:24.432278+00:00",
+    "evaluated_sample_count": 100,
+    "test_dataset": "C:\\Users\\jaysu\\OneDrive\\Desktop\\PROJECTS\\pransh-Setu-NLP\\send\\data\\hi_test.jsonl",
     "decoding_parameters": {
       "strategy": "beam_search",
       "num_beams": 4,
@@ -24,46 +24,46 @@
       "model_id": "stage1",
       "name": "Stage 1: IndicBART + IndicNLG QG",
       "checkpoint": "checkpoints/stage1_indicnlg_qg",
-      "total_samples": 10,
-      "total_runtime_seconds": 24.56,
-      "samples_per_second": 0.41,
-      "mean_latency_ms": 2455.72,
+      "total_samples": 100,
+      "total_runtime_seconds": 34.73,
+      "samples_per_second": 2.88,
+      "mean_latency_ms": 347.32,
       "metrics": {
-        "sacreBLEU": 1.829,
-        "bleu_1": 14.483,
-        "bleu_2": 7.116,
-        "bleu_3": 2.962,
-        "bleu_4": 2.029,
-        "rouge1": 0.0,
-        "rouge2": 0.0,
-        "rougeL": 0.0,
-        "rouge1_hindi": 18.864,
-        "rouge2_hindi": 4.969,
-        "rougeL_hindi": 17.075,
-        "chrF++": 19.861
+        "sacreBLEU": 10.445,
+        "bleu_1": 25.141,
+        "bleu_2": 15.493,
+        "bleu_3": 10.183,
+        "bleu_4": 6.581,
+        "rouge1": 7.0,
+        "rouge2": 1.0,
+        "rougeL": 7.0,
+        "rouge1_hindi": 30.891,
+        "rouge2_hindi": 12.821,
+        "rougeL_hindi": 28.619,
+        "chrF++": 29.349
       }
     },
     "stage2": {
       "model_id": "stage2",
       "name": "Stage 2: NCERT Curriculum Adapted (LoRA)",
       "checkpoint": "checkpoints/stage2_ncert_gold_lora",
-      "total_samples": 10,
-      "total_runtime_seconds": 22.12,
-      "samples_per_second": 0.45,
-      "mean_latency_ms": 2212.41,
+      "total_samples": 100,
+      "total_runtime_seconds": 39.01,
+      "samples_per_second": 2.56,
+      "mean_latency_ms": 390.12,
       "metrics": {
-        "sacreBLEU": 1.829,
-        "bleu_1": 14.483,
-        "bleu_2": 7.116,
-        "bleu_3": 2.962,
-        "bleu_4": 2.029,
-        "rouge1": 0.0,
-        "rouge2": 0.0,
-        "rougeL": 0.0,
-        "rouge1_hindi": 18.864,
-        "rouge2_hindi": 4.969,
-        "rougeL_hindi": 17.075,
-        "chrF++": 19.861
+        "sacreBLEU": 10.451,
+        "bleu_1": 25.222,
+        "bleu_2": 15.525,
+        "bleu_3": 10.202,
+        "bleu_4": 6.594,
+        "rouge1": 7.0,
+        "rouge2": 1.0,
+        "rougeL": 7.0,
+        "rouge1_hindi": 31.024,
+        "rouge2_hindi": 12.835,
+        "rougeL_hindi": 28.641,
+        "chrF++": 29.35
       }
     }
   },
@@ -75,27 +75,27 @@
   },
   "relative_improvements": {
     "sacreBLEU": {
-      "stage1_baseline": 1.829,
-      "stage2_adapted": 1.829,
-      "absolute_delta": 0.0,
-      "percentage_change": 0.0
+      "stage1_baseline": 10.445,
+      "stage2_adapted": 10.451,
+      "absolute_delta": 0.006,
+      "percentage_change": 0.06
     },
     "rougeL": {
-      "stage1_baseline": 0.0,
-      "stage2_adapted": 0.0,
+      "stage1_baseline": 7.0,
+      "stage2_adapted": 7.0,
       "absolute_delta": 0.0,
       "percentage_change": 0.0
     },
     "rougeL_hindi": {
-      "stage1_baseline": 17.075,
-      "stage2_adapted": 17.075,
-      "absolute_delta": 0.0,
-      "percentage_change": 0.0
+      "stage1_baseline": 28.619,
+      "stage2_adapted": 28.641,
+      "absolute_delta": 0.022,
+      "percentage_change": 0.08
     },
     "chrF++": {
-      "stage1_baseline": 19.861,
-      "stage2_adapted": 19.861,
-      "absolute_delta": 0.0,
+      "stage1_baseline": 29.349,
+      "stage2_adapted": 29.35,
+      "absolute_delta": 0.001,
       "percentage_change": 0.0
     }
   },
@@ -198,6 +198,56 @@
       "predictions": {
         "stage1": "रूसेल डी बैलेउल ने एशिया माइनर में स्वतंत्र राज्य बनाने की कोशिश किसने की?",
         "stage2": "रूसेल डी बैलेउल ने एशिया माइनर में स्वतंत्र राज्य बनाने की कोशिश किसने की?"
+      }
+    },
+    {
+      "sample_index": 11,
+      "context": "यह केवल 1489 में था कि वेनिस के लोगों ने द्वीप पर पूर्ण नियंत्रण हासिल कर लिया, जो 1571 में फमागुस्टा के पतन तक एक ईसाई गढ़ बना रहा।",
+      "answer": "1489",
+      "reference_question": "वेनिस के लोगों ने कब कुप्रुस पर पूरी तरह कब्ज़ा कर लिया?",
+      "predictions": {
+        "stage1": "वेनिस के लोगों ने किस साल द्वीप पर पूर्ण नियंत्रण हासिल किया?",
+        "stage2": "वेनिस के लोगों ने द्वीप पर पूर्ण नियंत्रण कब हासिल किया?"
+      }
+    },
+    {
+      "sample_index": 12,
+      "context": "10 जुलाई 1856-7 जनवरी 1943) एक सर्बियाई अमेरिकी आविष्कारक, विद्युत इंजीनियर, यांत्रिक इंजीनियर, भौतिक विज्ञानी और भविष्यवादी थे, जिन्हें आधुनिक वैकल्पिक विद्युत आपूर्ति प्रणाली (एसी) के डिजाइन में उनके योगदान के लिए जाना जाता है।",
+      "answer": "1943",
+      "reference_question": "किस साल टेस्ला की मौत हुई?",
+      "predictions": {
+        "stage1": "सर्बियाई अमेरिकी आविष्कारक का जन्म कब हुआ था?",
+        "stage2": "सर्बियाई अमेरिकी आविष्कारक का जन्म कब हुआ था?"
+      }
+    },
+    {
+      "sample_index": 13,
+      "context": "1882 में, टेस्ला ने फ्रांस में कॉन्टिनेंटल एडिसन कंपनी के लिए काम करना शुरू किया, बिजली के उपकरणों को डिजाइन करना और उनमें सुधार करना शुरू किया।",
+      "answer": "फ्रांस में",
+      "reference_question": "कॉन्टिनेंटल एडिसन कंपनी कहां स्थित थी?",
+      "predictions": {
+        "stage1": "1882 में टेस्ला ने किस कंपनी के लिए काम करना शुरू किया?",
+        "stage2": "1882 में टेस्ला ने किस कंपनी के लिए काम करना शुरू किया?"
+      }
+    },
+    {
+      "sample_index": 14,
+      "context": "एडिसन की कंपनी को छोड़ने के बाद टेस्ला ने 1886 में दो व्यवसायियों, रॉबर्ट लेन और बेंजामिन वेल के साथ साझेदारी की, जो टेस्ला के नाम पर एक इलेक्ट्रिक लाइटिंग कंपनी, टेस्ला इलेक्ट्रिक लाइट एंड मैन्युफैक्चरिंग के वित्तपोषण के लिए सहमत हुए।",
+      "answer": "टेस्ला के नाम पर एक इलेक्ट्रिक लाइटिंग कंपनी",
+      "reference_question": "लेन और वैल फाइनेंस क्या था?",
+      "predictions": {
+        "stage1": "एडिसन ने 1886 में किस कंपनी के साथ साझेदारी की?",
+        "stage2": "एडिसन ने 1886 में किस कंपनी के साथ साझेदारी की?"
+      }
+    },
+    {
+      "sample_index": 15,
+      "context": "मार्च 1896 में, विल्हेम रोस्ट्रॉन्टेगन की एक्स-रे और एक्स-रे इमेजिंग (रेडियोग्राफी) की खोज के बारे में सुनने के बाद, टेस्ला ने एक्स-रे इमेजिंग में अपने स्वयं के प्रयोग शुरू किए, अपने स्वयं के डिजाइन की एक उच्च ऊर्जा वाली एकल टर्मिनल वैक्यूम ट्यूब का विकास किया जिसमें कोई लक्ष्य इलेक्ट्रोड नहीं था और जो टेस्ला कोइल के उत्पादन से काम करता था (इस उपकरण द्वारा उत्पादित घटना के लिए आधुनिक शब्द ब्रेम्सस्ट्रॉलंग या ब्रेकिंग विकिरण है)।",
+      "answer": "ब्रेकिंग विकिरण",
+      "reference_question": "एक्स-रे इमेजिंग के लिए एक और शब्द क्या है?",
+      "predictions": {
+        "stage1": "टेस्ला ने अपने स्वयं के डिजाइन की एक उच्च ऊर्जा वाली एकल टर्मिनल वैक्यूम ट्यूब का विकास कैसे किया?",
+        "stage2": "टेस्ला ने अपने स्वयं के डिजाइन की एक उच्च ऊर्जा वाली एकल टर्मिनल वैक्यूम ट्यूब का विकास कैसे किया?"
       }
     }
   ]

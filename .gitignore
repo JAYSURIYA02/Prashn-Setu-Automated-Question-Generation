@@ -28,4 +28,5 @@ desktop.ini
 # Temporary / Generated
 *.log
 *.tmp
+*.db
 eval_results.json

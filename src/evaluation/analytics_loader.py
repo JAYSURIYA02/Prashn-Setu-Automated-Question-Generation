@@ -44,16 +44,32 @@ def load_research_analytics_data() -> Dict[str, Any]:
         m_data = bench_data["models"]
         s1 = m_data.get("stage1", {}).get("metrics", {})
         s2 = m_data.get("stage2", {}).get("metrics", {})
-        baseline = m_data.get("baseline", {})
+        baseline = bench_data.get("unavailable_models", {}).get("baseline", {})
 
-        metrics_list = ["sacrebleu", "rouge1", "rouge2", "rougeL", "chrf"]
+        metrics_map = [
+            ("sacrebleu", ["sacreBLEU", "sacrebleu"]),
+            ("rouge1", ["rouge1"]),
+            ("rouge2", ["rouge2"]),
+            ("rougeL", ["rougeL"]),
+            ("chrf", ["chrF++", "chrf"]),
+            ("rougeL_hindi", ["rougeL_hindi", "rougeL_hindi_tokenized"])
+        ]
         delta = {}
-        for m in metrics_list:
-            v1 = float(s1.get(m, 0.0))
-            v2 = float(s2.get(m, 0.0))
-            abs_diff = round(v2 - v1, 2)
+        for out_name, possible_keys in metrics_map:
+            v1 = 0.0
+            for k in possible_keys:
+                if k in s1:
+                    v1 = float(s1[k])
+                    break
+            v2 = 0.0
+            for k in possible_keys:
+                if k in s2:
+                    v2 = float(s2[k])
+                    break
+
+            abs_diff = round(v2 - v1, 3)
             rel_diff = round(((v2 - v1) / v1 * 100.0), 2) if v1 > 0 else 0.0
-            delta[m] = {
+            delta[out_name] = {
                 "stage1": v1,
                 "stage2": v2,
                 "absolute_diff": abs_diff,
@@ -61,57 +77,81 @@ def load_research_analytics_data() -> Dict[str, Any]:
             }
 
         comparison_summary = {
-            "test_samples": bench_data.get("test_samples", 100),
-            "decoding_parameters": bench_data.get("parameters", {}),
-            "baseline_status": baseline.get("status", "unavailable"),
-            "baseline_reason": baseline.get("reason", "Original IndicNLG checkpoint unavailable"),
+            "test_samples": bench_data.get("metadata", {}).get("evaluated_sample_count", 100),
+            "decoding_parameters": bench_data.get("metadata", {}).get("decoding_parameters", {}),
+            "baseline_status": "unavailable",
+            "baseline_reason": baseline.get("reason", "Original IndicNLG question-generation baseline checkpoint is unavailable in checkpoints/"),
             "metrics_comparison": delta,
             "latency": {
-                "stage1_ms": m_data.get("stage1", {}).get("latency_ms_per_sample", 0.0),
-                "stage2_ms": m_data.get("stage2", {}).get("latency_ms_per_sample", 0.0)
+                "stage1_ms": m_data.get("stage1", {}).get("mean_latency_ms", 0.0),
+                "stage2_ms": m_data.get("stage2", {}).get("mean_latency_ms", 0.0)
             }
         }
 
-    # Human Evaluation Summary
-    human_eval = {
-        "is_real_data": False,
-        "sample_count": 0,
-        "categories": {
-            "naturalness": {"stage1": 3.42, "stage2": 4.18, "delta": "+0.76"},
-            "relevance": {"stage1": 3.75, "stage2": 4.25, "delta": "+0.50"},
-            "answerability": {"stage1": 3.60, "stage2": 4.15, "delta": "+0.55"},
-            "factual_consistency": {"stage1": 3.85, "stage2": 4.30, "delta": "+0.45"}
-        },
-        "disclaimer": "प्रदर्शित मानवीय रेटिंग्स १०० एन.सी.ई.आर.टी. नमूनों पर आधारित तुलनात्मक प्रोटोकॉल का सारांश हैं।"
-    }
-
+    # Human Evaluation Summary: Honest assessment of current state
+    completed_rating_count = 0
     if os.path.exists(human_blind_file):
         try:
             with open(human_blind_file, "r", encoding="utf-8") as f:
                 reader = csv.DictReader(f)
-                rows = list(reader)
-                human_eval["sample_count"] = len(rows)
-                human_eval["is_real_data"] = True
-                human_eval["disclaimer"] = f"results/human_eval_blinded_comparison.csv से {len(rows)} ब्लाइंडेड तुलनात्मक नमूनों का वास्तविक डेटा।"
+                for r in reader:
+                    val = r.get("model_A_fluency_1to5", "").strip()
+                    if val and val.isdigit():
+                        completed_rating_count += 1
         except Exception:
             pass
 
-    # Qualitative Error Analysis highlights
+    human_eval = {
+        "status": "completed" if completed_rating_count > 0 else "pending_validation",
+        "is_real_data": completed_rating_count > 0,
+        "sample_count": completed_rating_count,
+        "evaluation_protocol": "results/HUMAN_EVALUATION_PROTOCOL.md",
+        "categories": {
+            "naturalness": {
+                "stage1": f"{completed_rating_count} ratings" if completed_rating_count > 0 else "लंबित (Pending)",
+                "stage2": f"{completed_rating_count} ratings" if completed_rating_count > 0 else "लंबित (Pending)",
+                "delta": "N/A"
+            },
+            "relevance": {
+                "stage1": f"{completed_rating_count} ratings" if completed_rating_count > 0 else "लंबित (Pending)",
+                "stage2": f"{completed_rating_count} ratings" if completed_rating_count > 0 else "लंबित (Pending)",
+                "delta": "N/A"
+            },
+            "answerability": {
+                "stage1": f"{completed_rating_count} ratings" if completed_rating_count > 0 else "लंबित (Pending)",
+                "stage2": f"{completed_rating_count} ratings" if completed_rating_count > 0 else "लंबित (Pending)",
+                "delta": "N/A"
+            },
+            "factual_consistency": {
+                "stage1": f"{completed_rating_count} ratings" if completed_rating_count > 0 else "लंबित (Pending)",
+                "stage2": f"{completed_rating_count} ratings" if completed_rating_count > 0 else "लंबित (Pending)",
+                "delta": "N/A"
+            }
+        },
+        "disclaimer": (
+            f"results/human_eval_blinded_comparison.csv से {completed_rating_count} मूल्यांकित नमूनों का वास्तविक डेटा।"
+            if completed_rating_count > 0 else
+            "⚠️ मानवीय मूल्यांकन लंबित है (Pending Validation): 'results/human_eval_sample_100.csv' एवं 'results/human_eval_blinded_comparison.csv' वर्तमान में रिक्त टेम्पलेट हैं। शोध सत्यनिष्ठा हेतु कोई कृत्रिम स्कोर प्रदर्शित नहीं किया गया है।"
+        ),
+        "synthetic_fixture_note": "results/mock_human_eval_summary.md में उपस्थित स्कोर केवल सांख्यिकीय गणना टूल को सत्यापित करने हेतु निर्मित कृत्रिम टेस्ट फिक्स्चर (tests/fixtures/) के हैं।"
+    }
+
+    # Qualitative Error Analysis highlights grounded in verified QUALITATIVE_ERROR_ANALYSIS.md
     qualitative_highlights = [
         {
-            "category": "अनुवादित शैली व कृत्रिम पदावली (Translationese Artifacts)",
-            "observation": "Stage 1 (मूल IndicNLG) अनुवादित वाक्यों की अस्वाभाविक संरचना प्रस्तुत करता था।",
-            "adaptation_impact": "Stage 2 NCERT LoRA ने 'स्पष्ट कीजिए', 'क्या अभिप्राय है' जैसी स्वाभाविक पाठ्यपुस्तकीय शब्दावली सिखाई।"
+            "category": "प्रश्नवाचक शब्दों व उत्तर प्रकार का असंतुलन (Wh-Word / Answer Type Mismatch)",
+            "observation": "Stage 1 मॉडल लगभग 35-45% विफलताओं में उत्तर के प्रकार के विपरीत प्रश्नवाचक शब्द चुनता है (उदा. स्थान या व्यक्ति के लिए 'कब' पूछना)।",
+            "adaptation_impact": "Stage 2 LoRA संरचना में interrogative grounding के लिए पेरामीटर-एफिशिएंट लेयर्स जोड़ी गई हैं, परंतु वास्तविक पाठ्यपुस्तकीय सुधार प्रमाणित डेटासेट पर प्रशिक्षण के पश्चात ही सत्यापित होगा।"
         },
         {
-            "category": "प्रश्नवाचक शब्दों का विस्थापन (Interrogative Word Placement)",
-            "observation": "बिना अनुकूलन के मॉडल 'क्या' शब्द को वाक्य के अंत में अनुचित स्थान पर रखता था।",
-            "adaptation_impact": "Stage 2 में मानक हिंदी व्याकरण के अनुरूप प्रश्नवाचक पदों का सटीक संयोजन प्राप्त हुआ।"
+            "category": "संख्यात्मक म्यूटेशन व तथ्यात्मक भ्रम (Numeric & Factual Hallucination)",
+            "observation": "सबवर्ड टोकनाइजेशन के कारण मॉडल संख्याओं को विकृत कर देता है (उदा. 24-10 को 24-25 बना देना)।",
+            "adaptation_impact": "पाठ्यपुस्तक अनुकूलन में संख्यात्मक तथ्यों के सत्यापन हेतु कंस्ट्रेंट डिकोडिंग व साक्ष्य-सत्यापन (Evidence Checker) आवश्यक है।"
         },
         {
-            "category": "पाठ्यक्रमीय संरेखण (Curriculum Alignment)",
-            "observation": "सामान्य NLG मॉडल बिना महत्वपूर्ण तथ्य के निरर्थक संख्याओं पर प्रश्न बना देता था।",
-            "adaptation_impact": "Stage 2 मुख्य ऐतिहासिक तिथियों, वैज्ञानिकों के नामों, और केंद्रीय सिद्धांतों पर केंद्रित प्रश्न उत्पन्न करता है।"
+            "category": "अनुवादित शैली बनाम पाठ्यपुस्तकीय भाषा (Translationese vs Textbook Phrasing)",
+            "observation": "मूल IndicNLG डेटासेट अंग्रेज़ी SQuAD का अनुवाद होने से वाक्य संरचना में अनुवादित कृत्रिमता पाई जाती है।",
+            "adaptation_impact": "प्रामाणिक NCERT पाठ्यपुस्तकों पर LoRA अनुकूलन का मुख्य उद्देश्य 'स्पष्ट कीजिए', 'तात्पर्य क्या है' जैसे मानक शैक्षिक स्वरूप का विकास करना है।"
         }
     ]
 

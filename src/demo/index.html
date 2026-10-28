@@ -1914,11 +1914,13 @@
 
                 for (const [dim, vals] of Object.entries(hCats)) {
                     const tr = document.createElement('tr');
+                    const s1Text = (typeof vals.stage1 === 'number') ? `${vals.stage1} / 5.0` : vals.stage1;
+                    const s2Text = (typeof vals.stage2 === 'number') ? `${vals.stage2} / 5.0` : vals.stage2;
                     tr.innerHTML = `
                         <td><strong>${dim}</strong></td>
-                        <td>${vals.stage1} / 5.0</td>
-                        <td><strong>${vals.stage2} / 5.0</strong></td>
-                        <td style="color:#166534; font-weight:600;">${vals.delta}</td>
+                        <td>${escapeHtml(String(s1Text))}</td>
+                        <td><strong>${escapeHtml(String(s2Text))}</strong></td>
+                        <td style="color:${vals.delta === 'N/A' ? '#64748b' : '#166534'}; font-weight:600;">${escapeHtml(vals.delta)}</td>
                         <td>${rubrics[dim] || ''}</td>
                     `;
                     humanBody.appendChild(tr);

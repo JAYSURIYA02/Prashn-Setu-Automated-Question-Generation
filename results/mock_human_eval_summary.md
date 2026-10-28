@@ -1,8 +1,14 @@
-# Prashn-Setu: Human Evaluation Analysis Report
+# Prashn-Setu: Human Evaluation Tooling Verification Report (Synthetic Fixture)
+
+> [!IMPORTANT]
+> **RESEARCH INTEGRITY NOTICE — SYNTHETIC TEST FIXTURE ONLY:**
+> This report was generated using synthetic demonstration fixtures (`tests/fixtures/mock_human_eval.csv` and `mock_human_eval_annotator2.csv`, $N=25$) to test and verify the statistical analysis engine (`scripts/analyze_human_eval.py`).
+> **These figures DO NOT represent real human judgments or native-speaker evaluations of Prashn-Setu.**
+> Actual human evaluation of Stage 1 and Stage 2 models on the held-out dataset remains **Pending Validation**. Both `results/human_eval_sample_100.csv` and `results/human_eval_blinded_comparison.csv` are clean, unrated templates awaiting rater execution under the protocol defined in `results/HUMAN_EVALUATION_PROTOCOL.md`.
 
 **Date:** 2026-10-15 18:40:44
-**Primary Evaluator:** Annotator 1
-**Sample Count:** 25
+**Primary Evaluator:** Synthetic Fixture (Annotator 1 Mock)
+**Sample Count:** 25 (Synthetic Test Fixture)
 **Evaluated Count:** 25 (100.0%)
 
 ## 1. Quantitative Ratings Summary (1–5 Likert Scale)

@@ -1,5 +1,9 @@
 # Prashn-Setu: Human Evaluation Protocol & Guidelines
 
+> [!NOTE]
+> **Current Research Status:** The sampling methodology, scoring rubrics, and inter-annotator agreement pipelines are fully verified and operational.
+> **Human Rating Collection is currently PENDING VALIDATION:** Both `results/human_eval_sample_100.csv` and `results/human_eval_blinded_comparison.csv` contain held-out test predictions with unrated blank score fields. Genuine native-speaker annotations have not yet been recorded.
+
 ## 1. Objective
 
 This protocol provides a reproducible, rigorous framework for human assessment of Indic Question Generation (Hindi) models. Automatic metrics (SacreBLEU, ROUGE, chrF++) measure surface n-gram and character overlap against a single reference question. However:

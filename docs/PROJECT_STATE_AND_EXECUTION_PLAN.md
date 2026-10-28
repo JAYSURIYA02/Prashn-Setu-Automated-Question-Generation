@@ -28,11 +28,12 @@ Stage 2 (Curriculum Adaptation on Native-Hindi Textbooks) is currently **blocked
 | **Qualitative Error Analysis** | `results/QUALITATIVE_ERROR_ANALYSIS.md` | **Verified Complete** | Artifact audit script | 5-category failure taxonomy covering Wh-word mismatch, numeric hallucination, and distractor confusion. |
 | **Dataset Validator CLI** | `scripts/validate_dataset.py` | **Verified Operational** | `python run.py validate-data ...` | Validates schema, answer grounding, Devanagari syntax, duplicates, and cross-split leakage. |
 | **Stage 2 Adaptation Script** | `src/training/adapt_stage2.py` | **Verified Guarded** | `python run.py adapt-stage2 ...` | Enforces 50-example minimum guard, separate train/val files, LoRA protection, and distinct output dir. |
+| **Stage 2 Checkpoint** | `checkpoints/stage2_ncert_gold_lora` | **Experimental Adapter** | `ModelManager.verify_stage2()` | Valid PEFT LoRA configuration ($r=16, \alpha=32$ on `q_proj`, `v_proj`). Training provenance cannot be independently confirmed from repository data; curriculum efficacy pending validation on verified textbook data. |
 | **Interactive CLI Demo** | `src/evaluation/inference.py` | **Verified Operational** | `python run.py infer` | Terminal-based interactive QG prompt. |
-| **Web / UI Demo** | `src/demo/app.py` | **Pending Implementation** | TBD | Lightweight, browser-accessible demo for passage-to-question generation. |
-| **Automated Test Suite** | `tests/` | **Pending Implementation** | `python -m unittest discover tests` | Automated test suite for data, inference, metrics, and validation. |
-| **Technical Report** | `docs/TECHNICAL_REPORT.md` | **Pending Implementation** | TBD | Full university-level scientific paper / technical report. |
-| **Project README** | `README.md` | **Pending Enhancement** | TBD | Needs complete update with benchmark tables, CLI guides, and limitations. |
+| **Web / UI Demo** | `src/demo/app.py` | **Verified Operational** | `python run.py demo --port 7860` | Full 8-tab browser-based educational QG and model comparison platform. |
+| **Automated Test Suite** | `tests/` | **Verified Operational** | `python -m unittest tests/test_platform_features.py tests/test_model_comparison.py` | 48 automated tests covering model verification, grounding, quiz, bank, exports, and API validation. |
+| **Technical Report** | `docs/TECHNICAL_REPORT.md` | **Verified Complete** | File review | Full scientific report covering Stage 1 baseline, Devanagari ROUGE discovery, error taxonomy, and LoRA framework. |
+| **Project README** | `README.md` | **Verified Audited** | File review | Updated with verified benchmarks, research integrity audit, and limitations. |
 
 ---
 

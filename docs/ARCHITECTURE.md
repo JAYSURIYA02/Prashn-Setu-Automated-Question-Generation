@@ -38,10 +38,10 @@ flowchart TD
     end
 
     subgraph ApplicationLayer["4. User Interfaces & Integration"]
-        T3 --> I1["QuestionGenerator Engine"]
+        T3 --> I1["QuestionGenerator Engine (Stage 2 Primary + Stage 1 Base)"]
         I1 --> I2["Terminal CLI<br/>(python run.py infer)"]
-        I1 --> I3["Web Demo Server<br/>(http://localhost:7860)"]
-        I1 --> I4["Automated Test Suite<br/>(39 Unit & Regression Tests)"]
+        I1 --> I3["Web Demo Server<br/>(4 Workspaces, Bilingual UI, Inline Evidence, Font Serving)"]
+        I1 --> I4["Automated Test Suite<br/>(49 Unit & Regression Tests)"]
     end
 ```
 

@@ -218,15 +218,15 @@ python run.py demo --port 7860
 ```
 Open **`http://localhost:7860`** in any web browser.
 
-The platform provides 8 tabs:
-- **✨ प्रश्न सृजन (Generate):** Generate questions with category selection (Factual, Conceptual, Reasoning, HOTS, MCQ) and interactive evidence highlighting.
-- **⚖️ मॉडल तुलना (Comparison):** Side-by-side comparison of Stage 1 and Stage 2 with per-model latency tracking.
-- **🎮 क्विज़ व अभ्यास (Quiz):** Interactive practice tests with instant scoring and explanation review.
-- **📄 पाठ्यपुस्तक अपलोड (Upload):** Upload PDF/TXT chapters for chunked question generation.
-- **📚 प्रश्न बैंक (Question Bank):** Searchable SQLite repository (`data/question_bank.db`) with category and difficulty filters.
-- **📝 प्रश्नपत्र निर्माता (Paper Builder):** Multi-section exam builder with zero-dependency Devanagari PDF export (student copy excludes answers; separate Answer Key PDF for evaluators).
-- **📊 शोध विश्लेषण (Research):** Formal benchmark tables and qualitative error analysis.
-- **⚙️ सिस्टम स्थिति (Status):** Live checkpoint verification and model health.
+The platform provides **4 consolidated workspaces** with bilingual button labeling (`[Hindi] ([English])`) and inline collapsible context evidence:
+- **📚 प्रश्न केंद्र (Question Studio & Hub):** Unified creation workspace featuring:
+  - *Generate & Upload:* Switch between single-passage generation (with NCERT presets) and full textbook chapter upload (.pdf/.txt) with sentence-aware chunking.
+  - *Inline Evidence:* Each question card embeds an inline collapsible context box highlighting supporting evidence sentences and answers directly inside the card.
+  - *📚 प्रश्न बैंक (Question Bank):* Searchable SQLite repository (`data/question_bank.db`) with full-text search, category, and difficulty filters.
+  - *📝 प्रश्नपत्र निर्माता (Paper Builder):* Multi-section exam assembler with marks validation and publication-ready Devanagari PDF export (student copy excludes answers; separate Answer Key PDF for evaluators).
+- **🎮 क्विज़ व अभ्यास (Practice & Quiz):** Interactive practice tests with instant scoring, percentage feedback, and retry mode for incorrect answers. Automatically primed with questions from uploaded textbooks.
+- **⚖️ मॉडल तुलना (Model Comparison):** Focused side-by-side comparison between Stage 1 IndicBART Base and Stage 2 NCERT-Adapted LoRA with zero reload.
+- **📊 Research & System Analytics:** English-first research dashboard displaying automated overlap benchmarks (ROUGE, BLEU, METEOR), human evaluation protocol, qualitative error analysis, and live system/hardware diagnostics.
 
 #### 2. Standalone CLI Inference
 Run predefined textbook examples:
@@ -257,7 +257,7 @@ Generates `results/model_comparison_results.json` and blinded evaluation templat
 ```bash
 python -m unittest tests/test_platform_features.py tests/test_model_comparison.py
 ```
-Runs the full suite of 48 unit and integration tests.
+Runs the full suite of 49 unit and integration tests.
 
 ---
 
@@ -284,6 +284,7 @@ Runs the full suite of 48 unit and integration tests.
 | `POST` | `/api/paper/export/csv` | Export question paper to UTF-8 BOM CSV for Microsoft Excel |
 | `POST` | `/api/paper/export/json` | Export question paper to JSON |
 | `GET` | `/api/benchmark_results` | Audited benchmark metrics and human evaluation status |
+| `GET` | `/fonts/<filename>` | Serves local TrueType font assets (`NotoSansDevanagari-Regular.ttf`, `NotoSansDevanagari-Bold.ttf`) for Devanagari typography |
 
 ---
 

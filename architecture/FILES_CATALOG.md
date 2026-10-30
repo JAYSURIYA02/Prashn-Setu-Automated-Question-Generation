@@ -18,7 +18,7 @@ This document catalogs every component in the active **Prashn-Setu** repository,
 
 ### 📄 `requirements.txt`
 * **What it is:** Python package dependency specification.
-* **Why it is present:** Specifies pinned package versions: `torch`, `transformers`, `peft`, `sentencepiece`, `protobuf`, `accelerate`, `evaluate`, `sacrebleu`, `rouge-score`, `scikit-learn`, `pandas`, `tqdm`, `pypdf`, and `reportlab`.
+* **Why it is present:** Specifies pinned package versions: `torch`, `transformers`, `peft`, `sentencepiece`, `protobuf`, `accelerate`, `evaluate`, `sacrebleu`, `rouge-score`, `scikit-learn`, `pandas`, `tqdm`, `pypdf`, `reportlab`, and `playwright`.
 
 ### 📄 `README.md`
 * **What it is:** Master project documentation and user guide.
@@ -121,7 +121,7 @@ This document catalogs every component in the active **Prashn-Setu** repository,
 
 ## 5. Automated Test Suites (`tests/`)
 
-### 📄 `tests/test_platform_features.py` (24 Tests)
+### 📄 `tests/test_platform_features.py` (25 Tests)
 * Validates Stage 2 LoRA model pre-flight verification and primary status.
 * Tests sentence splitting, character offset mapping, and evidence grounding classification.
 * Tests MCQ distractor synthesis and category question formatting.
@@ -130,6 +130,7 @@ This document catalogs every component in the active **Prashn-Setu** repository,
 * Tests quiz evaluation, exact MCQ grading, and fuzzy short-answer scoring.
 * Tests question paper marks validation, student answer suppression, and Devanagari PDF rendering.
 * Tests REST API endpoints (`/api/health`, `/api/model_status`, `/api/question_bank`).
+* Tests Devanagari Unicode matra visual-order reordering and space-detached matra healing.
 
 ### 📄 `tests/test_model_comparison.py` (24 Tests)
 * Validates model registry initialization and availability detection.

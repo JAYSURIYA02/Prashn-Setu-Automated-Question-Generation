@@ -65,7 +65,7 @@ from src.evaluation.advanced_generator import (
     CATEGORY_LABELS,
     DIFFICULTY_LABELS
 )
-from src.evaluation.textbook_processor import process_textbook_and_generate
+from src.evaluation.textbook_processor import process_textbook_and_generate, normalize_hindi_text
 from src.evaluation.paper_builder import (
     validate_paper_config,
     generate_paper_pdf,
@@ -131,6 +131,22 @@ class DemoHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.end_headers()
             self.wfile.write(content.encode("utf-8"))
+
+        elif path_clean.startswith("/fonts/"):
+            font_name = os.path.basename(path_clean)
+            font_dir = os.path.join(PROJECT_ROOT, "src", "demo", "fonts")
+            font_path = os.path.join(font_dir, font_name)
+            if os.path.exists(font_path) and font_path.lower().endswith((".ttf", ".otf", ".woff", ".woff2")):
+                self.send_response(200)
+                self.send_header("Content-Type", "font/ttf")
+                self.send_header("Cache-Control", "public, max-age=86400")
+                self.end_headers()
+                with open(font_path, "rb") as f:
+                    self.wfile.write(f.read())
+            else:
+                self.send_response(404)
+                self.end_headers()
+                self.wfile.write(b"Font not found")
 
         elif path_clean == "/api/health":
             mgr = get_shared_model_manager()
@@ -202,12 +218,14 @@ class DemoHTTPRequestHandler(BaseHTTPRequestHandler):
 
         # 1. Advanced Question Generation (Primary: Stage 2 LoRA Model)
         if path_clean in ["/api/generate", "/api/generate_advanced"]:
-            context = data.get("context", "").strip()
+            raw_context = data.get("context", "")
+            context = normalize_hindi_text(raw_context).strip()
             if not context:
                 self._send_json_error(400, "Field 'context' cannot be empty.")
                 return
 
-            answer = data.get("answer", "").strip()
+            raw_answer = data.get("answer", "")
+            answer = normalize_hindi_text(raw_answer).strip()
             num_questions = int(data.get("num_questions", 3))
             category = data.get("category", "factual")
             difficulty = data.get("difficulty", "medium")
@@ -257,7 +275,8 @@ class DemoHTTPRequestHandler(BaseHTTPRequestHandler):
 
         # 2. Multi-Model Comparison (Stage 1 vs. Stage 2 vs. Baseline)
         elif path_clean == "/api/compare":
-            context = data.get("context", "").strip()
+            raw_context = data.get("context", "")
+            context = normalize_hindi_text(raw_context).strip()
             if not context:
                 self._send_json_error(400, "Field 'context' cannot be empty.")
                 return
@@ -283,7 +302,8 @@ class DemoHTTPRequestHandler(BaseHTTPRequestHandler):
                 self._send_json_error(400, f"Parameter 'num_questions' ({num_questions}) out of valid range (1-10).")
                 return
 
-            answer = data.get("answer", "").strip()
+            raw_answer = data.get("answer", "")
+            answer = normalize_hindi_text(raw_answer).strip()
             num_beams = int(data.get("num_beams", 4))
             max_length = int(data.get("max_length", 64))
             no_repeat_ngram_size = int(data.get("no_repeat_ngram_size", 3))

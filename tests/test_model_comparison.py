@@ -231,25 +231,25 @@ class TestModelSelectionBehavior(unittest.TestCase):
         self.assertIn('selectAllAvailableModels()', html, "selectAllAvailableModels function call missing from HTML.")
         self.assertIn('id="modelSelectGroup"', html, "Dynamic modelSelectGroup container missing from HTML.")
 
-    def test_html_baseline_checkbox_disabled_and_deselected(self):
+    def test_html_baseline_removed_from_comparison_ui(self):
+        """Verifies that unavailable baseline checkbox is removed from the Model Comparison UI per user requirement."""
         handler = MockHTTPHandler("GET", "/")
         handler.do_GET()
         self.assertEqual(handler.response_code, 200)
         html = handler.get_response_text()
-        self.assertIn('id="chkBaseline"', html)
-        # Verify chkBaseline has disabled attribute
-        self.assertRegex(html, r'<input[^>]*id="chkBaseline"[^>]*disabled', "chkBaseline must have disabled attribute.")
-        # Verify chkBaseline does NOT have checked attribute
-        self.assertNotRegex(html, r'<input[^>]*id="chkBaseline"[^>]*checked', "chkBaseline must NOT have checked attribute.")
+        self.assertNotIn('id="chkBaseline"', html, "chkBaseline should be removed from Model Comparison UI.")
+        self.assertIn('id="chkStage1"', html, "chkStage1 must be present in Model Comparison UI.")
+        self.assertIn('id="chkStage2"', html, "chkStage2 must be present in Model Comparison UI.")
 
-    def test_html_displays_unavailable_explanation_reason(self):
+    def test_html_includes_devanagari_fonts_and_repair(self):
+        """Verifies local Noto Sans Devanagari font serving and repairHindiDevanagariText function."""
         handler = MockHTTPHandler("GET", "/")
         handler.do_GET()
         self.assertEqual(handler.response_code, 200)
         html = handler.get_response_text()
-        self.assertIn('id="baselineUnavailableNote"', html, "Baseline explanation container missing.")
-        self.assertIn('Original IndicNLG question-generation baseline checkpoint is not available', html)
-        self.assertIn('Pretrained raw IndicBART is intentionally not substituted', html)
+        self.assertIn('/fonts/NotoSansDevanagari-Regular.ttf', html)
+        self.assertIn('/fonts/NotoSansDevanagari-Bold.ttf', html)
+        self.assertIn('repairHindiDevanagariText', html)
 
     def test_api_models_provides_dynamic_status_and_reasons(self):
         handler = MockHTTPHandler("GET", "/api/models")

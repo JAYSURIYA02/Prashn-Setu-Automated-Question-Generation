@@ -4,100 +4,92 @@ This document establishes the **rules, constraints, and protocols** governing ho
 
 ---
 
-## 1. Reading Protocols (How Agents/Models Must Read Files)
+## 1. Reading & Inspection Protocols
 
 ### Rule 1.1: Single Source of Truth for Configuration
-* **Never assume or hardcode default hyperparameters** in downstream scripts.
-* Before proposing or executing any script, read [`config.py`](file:///mnt/a/iiits/5/NLP/PROJECT/config.py) to check the active values of:
-  * Sequence lengths (`max_source_length`, `max_target_length`)
+* **Never assume or hardcode default hyperparameters** in downstream modules.
+* Read [`src/config.py`](../src/config.py) to check active values of:
+  * Sequence lengths (`max_source_length=512`, `max_target_length=64`)
   * Target language tags (`<2hi>`)
-  * Batch sizes and learning rates.
+  * Model identifiers and default directories.
 
-### Rule 1.2: Strict UTF-8 Hindi Text Encoding
-* When reading any dataset file (`.jsonl`, `.json`, `.csv`) containing Hindi or Devanagari characters:
+### Rule 1.2: Strict UTF-8 Hindi Text Encoding & Devanagari Integrity
+* When reading or writing any dataset or artifact containing Hindi or Devanagari characters:
   * Always explicitly specify `encoding="utf-8"`.
-  * Never use standard Python string decoding without verifying character integrity (watch for corrupted Unicode escape sequences like `\u092a\u094c\u0927\u0947`).
+  * Ensure Unicode `NFC` normalization is maintained.
+  * Beware of decomposed visual-order short-i matras (`ि` U+093F placed before consonants) or space-detached lower matras (`ु` U+0941). When combining marks are preceded by spaces or newlines, renderers display empty dotted-circle placeholders `◌`. Always sanitize text through `repair_hindi_devanagari_text()`.
 
 ### Rule 1.3: Tokenizer Special Token Integrity
-* When inspecting or parsing input/target sequences:
-  * The delimiter tokens `<s>`, `</s>`, and `<2hi>` are **functional semantic markers** required by IndicBART.
-  * Do not strip them out during dataset loading or batch preparation.
-  * Only strip special tokens during post-processing for human readability or metric evaluation.
+* In IndicBART, `<s>` (64000), `</s>` (64001), and `<2hi>` (64006) are **functional syntactic tokens**.
+* Never strip them out during dataset loading or generation conditioning.
+* Only strip special tokens during post-processing for human readability or metric calculation.
 
 ### Rule 1.4: Checkpoint Inspection Protocol
-* When loading a checkpoint to perform inference or evaluation:
-  * First inspect if `adapter_config.json` exists in the checkpoint directory.
-  * If `adapter_config.json` exists: It is a **PEFT/LoRA adapter**. You must instantiate the base model first and wrap it via `PeftModel.from_pretrained()`.
-  * If `adapter_config.json` is absent: It is a **full model checkpoint**. Load directly via `AutoModelForSeq2SeqLM.from_pretrained()`.
+* Check if `adapter_config.json` exists in the checkpoint directory:
+  * If present: It is a **PEFT/LoRA adapter**. Load the base model first (`checkpoints/stage1_indicnlg_qg`), then attach the adapter (`PeftModel.from_pretrained()`).
+  * If absent: It is a full model checkpoint. Load directly via `AutoModelForSeq2SeqLM.from_pretrained()`.
+* Use `ModelManager` in `src/evaluation/model_registry.py` to maintain a singleton model lifecycle and avoid GPU memory leaks.
 
 ---
 
-## 2. Modifying & Editing Protocols (How to Alter Existing Files)
+## 2. Modifying & Editing Protocols
 
-### Rule 2.1: Configuration Updates
-* Any global change to paths, batch sizes, or model identifiers must be made inside `config.py`.
-* Do not scatter custom path overrides or magic numbers across `train.py`, `adapt_gold.py`, or `dataset.py`.
+### Rule 2.1: Model & Adapter Isolation
+* Stage 2 LoRA weights must attach non-destructively over Stage 1 base weights.
+* When testing or benchmarking Stage 1, use PEFT's context manager:
+  ```python
+  with model.disable_adapter():
+      # Evaluates Stage 1 base weights without reloading from disk
+  ```
+* Never overwrite, retrain, or delete existing checkpoint weights in `checkpoints/`.
 
-### Rule 2.2: Data Immutability
-* Files inside `data/indic_question_generation_hi/` and exported splits (`hi_train.jsonl`, `hi_validation.jsonl`, `hi_test.jsonl`) are **immutable raw references**.
-* Never overwrite or append experimental or synthetic data directly into the raw splits.
-* Place custom or curated textbook data into `data/ncert_gold_hindi.jsonl` or separate explicitly named files (e.g., `data/gold_eval_split.jsonl`).
+### Rule 2.2: Research Integrity & Honest Reporting
+* **Never fabricate evaluation scores, training logs, or human ratings.**
+* If human ratings have not been collected, report them explicitly as **Pending Validation**. Both `results/human_eval_sample_100.csv` and `results/human_eval_blinded_comparison.csv` must remain clean unrated templates until genuine annotators score them.
+* Synthetic test fixtures (e.g., in `mock_human_eval_summary.md`) must be clearly labeled as test fixtures, never described as real native-speaker evaluations.
+* Always cite the exact sample count ($N$) and artifact file when reporting metrics.
 
-### Rule 2.3: Safeguards Against Catastrophic Forgetting
-* When modifying `adapt_gold.py`:
-  * **Never perform unconstrained full-parameter fine-tuning with a high learning rate ($> 2\times 10^{-5}$)** on small gold datasets ($\le 500$ samples).
-  * Always enforce either:
-    1. **LoRA (PEFT)** on query/value attention projections (`q_proj`, `v_proj`), OR
-    2. Freeze the encoder and only fine-tune the top decoder layers with an early stopping patience of $\le 2$ epochs.
-
-### Rule 2.4: Vocabulary & Model Alignment
-* If modifying `prune_vocab.py`:
-  * Ensure that Latin letters, numerals (`0-9`), math operators, and punctuation are **always preserved** in the retained token set. School textbooks rely heavily on digits, dates, formulas, and units.
-  * If the vocabulary is pruned, ensure that downstream training scripts are passed the `--use_pruned` flag or read from `checkpoints/indicbart_hi_pruned`.
+### Rule 2.3: Devanagari ROUGE Tokenization Rule
+* Never evaluate Hindi text with default Hugging Face `evaluate.load("rouge")` without specifying a native Hindi tokenizer (`tokenizer=lambda x: x.split()`).
+* Default ROUGE strips all non-ASCII Devanagari script, creating a spurious metric defect.
 
 ---
 
-## 3. Writing Protocols (How to Generate New Files or Artifacts)
+## 3. Writing Protocols (Generating New Features & Code)
 
 ### Rule 3.1: Python Code Standards
 * All new Python modules must:
-  * Include module-level docstrings explaining purpose, inputs, and outputs.
-  * Utilize Python type hints (`from typing import List, Dict, Optional, Tuple`).
-  * Follow PEP 8 standards with descriptive variable naming.
-  * Support command-line argument overrides via `argparse`.
+  * Include module docstrings detailing purpose, inputs, and outputs.
+  * Utilize Python type hints (`from typing import List, Dict, Optional, Tuple, Any`).
+  * Adhere to PEP 8 standards with descriptive, clean variable naming.
 
-### Rule 3.2: Native Devanagari JSON Serialization
-* Whenever saving JSON or JSONL files containing Hindi strings:
+### Rule 3.2: Native Devanagari JSON & CSV Serialization
+* When saving JSON files containing Hindi text:
   ```python
   # CORRECT:
   json.dump(data, f, ensure_ascii=False, indent=2)
 
-  # FORBIDDEN (Escapes Devanagari into unreadable ascii codes):
+  # FORBIDDEN (Escapes Devanagari into unreadable ascii hex codes):
   json.dump(data, f, ensure_ascii=True)
-```
+  ```
+* When exporting CSV files containing Hindi text for Microsoft Excel:
+  * Always write a UTF-8 Byte Order Mark (`\ufeff`) or use `encoding="utf-8-sig"`.
 
-### Rule 3.3: Metric Computation Requirements
-* Never report only BLEU or ROUGE-1 for Hindi generation.
-* Any new evaluation script or benchmarking experiment **must compute and report chrF++**:
-  * Hindi is agglutinative and morphologically rich. `chrF++` evaluates character n-grams and word n-grams, preventing spurious zero-scores on valid inflectional variations.
-
-### Rule 3.4: Automated Architecture Tracking
-* After creating, deleting, or significantly modifying any file in the project:
-  * Execute `python update_architecture_state.py`
-  * This regenerates [`architecture/SYSTEM_STATE_TRACKER.md`](file:///mnt/a/iiits/5/NLP/PROJECT/architecture/SYSTEM_STATE_TRACKER.md), maintaining an up-to-date ledger of code lines, checksums, and dataset checkpoints.
+### Rule 3.3: Bilingual UI Buttons
+* Every interactive button in the browser web demo must include its English translation in brackets alongside its Hindi label, ensuring usability for both Hindi educators and English-speaking researchers (e.g. `💾 सभी प्रश्न बैंक में सुरक्षित करें (Save All to Question Bank)`).
 
 ---
 
-## 4. Summary of Golden Rules
+## 4. The 5 Golden Rules of Prashn-Setu
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
 │                          THE 5 GOLDEN RULES                            │
 │                                                                        │
-│ 1. ALL HYPERPARAMETERS RESIDE IN config.py                             │
+│ 1. ALL PATHS & LENGTH SETTINGS RESIDE IN src/config.py                 │
 │ 2. PRESERVE UTF-8 (ensure_ascii=False) ON ALL HINDI TEXT               │
-│ 3. NEVER FULL-FINETUNE ON SMALL GOLD SETS WITHOUT LoRA / LOW LR       │
-│ 4. ALWAYS REPORT chrF++ ALONGSIDE BLEU FOR HINDI EVALUATION            │
-│ 5. RE-RUN update_architecture_state.py AFTER STRUCTURAL EDITS          │
+│ 3. USE NATIVE HINDI TOKENIZATION FOR ROUGE & ALWAYS REPORT chrF++      │
+│ 4. NEVER FABRICATE BENCHMARK RESULTS OR HUMAN EVALUATION SCORES        │
+│ 5. PRESERVE DEVANAGARI UNICODE INTEGRITY (NO EMPTY PLACEHOLDER MATRAS) │
 └────────────────────────────────────────────────────────────────────────┘
 ```

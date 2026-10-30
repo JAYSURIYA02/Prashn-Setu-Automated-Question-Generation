@@ -4,10 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>प्रश्न-सेतु (Prashn-Setu) — AI-Powered Indic Question Generation Platform</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Local Noto Sans Devanagari Fonts with Web Fallbacks -->
     <style>
+        @font-face {
+            font-family: 'Noto Sans Devanagari';
+            src: url('/fonts/NotoSansDevanagari-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Noto Sans Devanagari';
+            src: url('/fonts/NotoSansDevanagari-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
         :root {
             --primary: #1e40af;
             --primary-hover: #1d4ed8;
@@ -27,7 +40,7 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             line-height: 1.6;
@@ -82,10 +95,10 @@
             box-shadow: var(--shadow-sm);
         }
 
-        /* Nav Tabs */
+        /* Nav Tabs - Consolidated Minimalist Workspaces */
         .tabs {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             border-bottom: 2px solid var(--border);
             margin-bottom: 24px;
             overflow-x: auto;
@@ -94,8 +107,8 @@
         .tab-btn {
             background: transparent;
             border: none;
-            padding: 10px 16px;
-            font-size: 14.5px;
+            padding: 12px 20px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--text-muted);
             cursor: pointer;
@@ -114,11 +127,52 @@
             color: var(--primary);
             border-bottom: 3px solid var(--primary);
             background: #ffffff;
+            font-weight: 700;
         }
         .tab-content {
             display: none;
         }
         .tab-content.active {
+            display: block;
+        }
+
+        /* Studio Sub-Navigation Pills */
+        .studio-subnav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .studio-pill {
+            background: #f1f5f9;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 8px 18px;
+            border-radius: 9999px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .studio-pill:hover {
+            background: #e2e8f0;
+            color: var(--text);
+        }
+        .studio-pill.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        .studio-subpane {
+            display: none;
+        }
+        .studio-subpane.active {
             display: block;
         }
 
@@ -194,19 +248,19 @@
             margin-bottom: 4px;
         }
 
-        /* Buttons */
+        /* Buttons with Bilingual Styling */
         .btn-primary {
             background: var(--primary);
             color: white;
             border: none;
             padding: 12px 24px;
             border-radius: 8px;
-            font-size: 15px;
+            font-size: 14.5px;
             font-weight: 600;
             cursor: pointer;
             width: 100%;
             transition: background 0.15s;
-            display: flex;
+            display: inline-flex;
             justify-content: center;
             align-items: center;
             gap: 8px;
@@ -248,61 +302,97 @@
             align-items: center;
             gap: 6px;
         }
-        .preset-btns {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
-        .preset-btn {
-            background: #eff6ff;
-            color: var(--primary);
-            border: 1px solid #bfdbfe;
+        .btn-action {
+            background: #ffffff;
+            border: 1px solid var(--border);
             padding: 6px 12px;
             border-radius: 6px;
             font-size: 12.5px;
             font-weight: 500;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-action:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        /* Presets */
+        .preset-btns {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .preset-btn {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12.5px;
+            color: var(--text);
             cursor: pointer;
             transition: all 0.15s;
         }
         .preset-btn:hover {
-            background: #dbeafe;
+            background: #eff6ff;
+            border-color: #93c5fd;
+            color: var(--primary);
         }
 
-        /* Question Cards & Evidence Highlighting */
+        /* Pills and Badges */
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 9999px;
+            font-size: 11.5px;
+            font-weight: 600;
+        }
+        .pill-blue { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
+        .pill-green { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+        .pill-purple { background: #faf5ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+        .pill-yellow { background: #fefce8; color: #854d0e; border: 1px solid #fef08a; }
+        .pill-red { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+        /* Question Cards */
         .question-card {
             background: #ffffff;
             border: 1px solid var(--border);
-            border-left: 4px solid var(--primary);
-            border-radius: 8px;
-            padding: 16px;
+            border-radius: 10px;
+            padding: 16px 18px;
             margin-bottom: 14px;
             box-shadow: var(--shadow-sm);
-            transition: all 0.15s;
+            border-left: 4px solid var(--primary);
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
         }
         .question-card:hover {
-            border-color: #cbd5e1;
             box-shadow: var(--shadow);
         }
         .question-header {
             display: flex;
-            justify-content: space-between;
             align-items: flex-start;
             gap: 12px;
             margin-bottom: 10px;
         }
         .question-num {
-            background: var(--primary-light);
+            background: #eff6ff;
             color: var(--primary);
             font-weight: 700;
-            padding: 2px 8px;
+            padding: 3px 8px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
+            white-space: nowrap;
         }
         .question-text {
             font-size: 15.5px;
             font-weight: 600;
             color: var(--text);
+            line-height: 1.5;
             flex: 1;
         }
         .badges-row {
@@ -311,105 +401,65 @@
             flex-wrap: wrap;
             margin-bottom: 10px;
         }
-        .pill {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 3px 8px;
-            border-radius: 9999px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .pill-blue { background: #dbeafe; color: #1e40af; }
-        .pill-green { background: #dcfce7; color: #15803d; }
-        .pill-yellow { background: #fef3c7; color: #b45309; }
-        .pill-red { background: #fee2e2; color: #b91c1c; }
-        .pill-purple { background: #f3e8ff; color: #7e22ce; }
-
         .target-ans-tag {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            padding: 8px 12px;
+            font-size: 13.5px;
+            color: #047857;
+            background: #ecfdf5;
+            padding: 6px 12px;
             border-radius: 6px;
-            font-size: 13px;
-            color: #334155;
             margin-bottom: 10px;
+            border: 1px solid #a7f3d0;
         }
         .evidence-box {
-            background: #fdf2f8;
-            border-left: 3px solid #ec4899;
+            font-size: 13px;
+            color: #475569;
+            background: #f8fafc;
             padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 12.5px;
-            color: #831843;
+            border-radius: 6px;
             margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
         }
         .mcq-options-list {
             margin: 10px 0;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
         .mcq-opt-item {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            padding: 8px 12px;
+            padding: 6px 12px;
             border-radius: 6px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            border: 1px solid var(--border);
+            font-size: 13.5px;
+            background: #f8fafc;
         }
         .mcq-opt-item.correct {
-            background: #dcfce7;
-            border-color: #86efac;
+            background: #ecfdf5;
+            border-color: #6ee7b7;
+            color: #065f46;
             font-weight: 600;
-            color: #166534;
         }
         .card-actions-bar {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-top: 10px;
+            margin-top: 12px;
             padding-top: 10px;
-            border-top: 1px solid #f1f5f9;
-        }
-        .btn-action {
-            background: transparent;
-            border: 1px solid var(--border);
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        .btn-action:hover {
-            background: #f1f5f9;
-            color: var(--text);
-            border-color: #cbd5e1;
+            border-top: 1px dashed var(--border);
         }
 
-        /* Interactive Passage Evidence Highlighter */
-        .passage-highlighter-view {
+        /* Inline Evidence Card */
+        .evidence-inline-card {
+            margin-top: 12px;
+            padding: 12px 16px;
             background: #fffbeb;
             border: 1px solid #fde68a;
+            border-left: 4px solid #f59e0b;
             border-radius: 8px;
-            padding: 16px;
-            font-size: 14.5px;
-            line-height: 1.8;
-            margin-bottom: 20px;
-        }
-        .highlighted-evidence-span {
-            background: #fde047;
-            color: #713f12;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            border-bottom: 2px solid #ca8a04;
+            font-size: 13.5px;
+            line-height: 1.7;
         }
 
-        /* Alert Boxes */
+        /* Alerts */
         .alert {
             padding: 12px 16px;
             border-radius: 8px;
@@ -421,7 +471,7 @@
         .alert-success { background: #dcfce7; border: 1px solid #86efac; color: #166534; }
         .alert-warning { background: #fef3c7; border: 1px solid #fde68a; color: #92400e; }
 
-        /* Comparison Side-by-Side */
+        /* Comparison Grid */
         .comparison-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -442,76 +492,6 @@
         .model-card.baseline {
             border-color: #cbd5e1;
             background: #f8fafc;
-        }
-        .model-card.unavailable {
-            border-style: dashed;
-            background: #fffbeb;
-            border-color: #fde68a;
-        }
-
-        /* Model Selector Checkbox Cards */
-        .model-select-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-        .model-selection-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .select-all-btn {
-            background: #eff6ff;
-            color: var(--primary);
-            border: 1px solid #bfdbfe;
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 12.5px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.15s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .select-all-btn:hover { background: #dbeafe; border-color: #93c5fd; }
-        .model-checkbox-card {
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 10px 14px;
-            background: #ffffff;
-            transition: all 0.15s ease;
-        }
-        .model-checkbox-card.unavailable-card {
-            background: #fffbeb;
-            border-color: #fde68a;
-        }
-        .model-checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13.5px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-        .model-checkbox-item.disabled {
-            cursor: not-allowed;
-            opacity: 0.85;
-        }
-        .model-unavailable-note {
-            margin-top: 8px;
-            margin-left: 27px;
-            font-size: 12px;
-            line-height: 1.45;
-            color: #92400e;
-            background: #fef3c7;
-            padding: 8px 12px;
-            border-radius: 6px;
-            border-left: 3px solid #d97706;
         }
 
         /* Benchmark & Research Tables */
@@ -577,246 +557,291 @@
     </header>
 
     <div class="container">
-        <!-- Navigation Tabs -->
+        <!-- Minimalistic 4-Workspace Navigation -->
         <nav class="tabs" role="tablist">
-            <button class="tab-btn active" id="tabBtnGenerate" onclick="switchTab('generate')">
-                ✨ प्रश्न सृजन (Generate)
-            </button>
-            <button class="tab-btn" id="tabBtnUpload" onclick="switchTab('upload')">
-                📄 पाठ्यपुस्तक अपलोड (Upload)
-            </button>
-            <button class="tab-btn" id="tabBtnBank" onclick="switchTab('bank')">
-                📚 प्रश्न बैंक (Question Bank)
+            <button class="tab-btn active" id="tabBtnStudio" onclick="switchTab('studio')">
+                📚 प्रश्न केंद्र (Question Studio & Hub)
             </button>
             <button class="tab-btn" id="tabBtnQuiz" onclick="switchTab('quiz')">
-                🎮 क्विज़ व अभ्यास (Quiz)
-            </button>
-            <button class="tab-btn" id="tabBtnPaper" onclick="switchTab('paper')">
-                📝 प्रश्नपत्र निर्माता (Paper Builder)
+                🎮 क्विज़ व अभ्यास (Practice & Quiz)
             </button>
             <button class="tab-btn" id="tabBtnCompare" onclick="switchTab('compare')">
-                ⚖️ मॉडल तुलना (Comparison)
+                ⚖️ मॉडल तुलना (Model Comparison)
             </button>
             <button class="tab-btn" id="tabBtnResearch" onclick="switchTab('research')">
-                📊 शोध विश्लेषण (Research)
-            </button>
-            <button class="tab-btn" id="tabBtnStatus" onclick="switchTab('status')">
-                ⚙️ सिस्टम स्थिति (Status)
+                📊 Research & System Analytics
             </button>
         </nav>
 
         <!-- ========================================== -->
-        <!-- TAB 1: ADVANCED QUESTION GENERATION        -->
+        <!-- WORKSPACE 1: QUESTION STUDIO & HUB         -->
         <!-- ========================================== -->
-        <div id="tabGenerate" class="tab-content active">
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">📖 प्रामाणिक पाठ्यपुस्तक उदाहरण (NCERT Preset Examples)</span>
-                    <span style="font-size: 12px; color: var(--text-muted);">क्लिक करके प्रसंग स्वतः भरें</span>
-                </div>
-                <div class="preset-btns" id="generatePresetContainer"></div>
+        <div id="tabStudio" class="tab-content active">
+            <!-- Studio Sub-Navigation Pills -->
+            <div class="studio-subnav">
+                <button type="button" class="studio-pill active" id="pillStudioGenerate" onclick="switchStudioSubTab('generate')">
+                    ✨ प्रश्न निर्माण व अपलोड (Generate & Upload)
+                </button>
+                <button type="button" class="studio-pill" id="pillStudioBank" onclick="switchStudioSubTab('bank')">
+                    📚 प्रश्न बैंक (Question Bank)
+                </button>
+                <button type="button" class="studio-pill" id="pillStudioPaper" onclick="switchStudioSubTab('paper')">
+                    📝 प्रश्नपत्र निर्माता (Paper Builder)
+                </button>
+            </div>
 
-                <form id="generateForm" onsubmit="handleAdvancedGenerate(event); return false;">
-                    <div class="form-group">
-                        <label for="genContextInput">हिंदी प्रसंग / पाठ्यपुस्तक अंश (Hindi Context Passage) *</label>
-                        <textarea id="genContextInput" placeholder="पाठ्यपुस्तक का एक या अधिक अनुच्छेद यहाँ दर्ज करें..."></textarea>
+            <!-- SUBPANE 1A: GENERATE & UPLOAD -->
+            <div id="subpaneGenerate" class="studio-subpane active">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">✨ प्रश्न निर्माण व पाठ्यपुस्तक प्रसंस्करण (Question Generation & Textbook Processing)</span>
+                        <div style="display:flex; gap:8px;">
+                            <button type="button" class="btn-action" id="togglePassageModeBtn" onclick="toggleInputMode('passage')" style="background:#eff6ff; border-color:#93c5fd; color:#1e40af; font-weight:600;">
+                                📖 प्रसंग से प्रश्न बनाएं (From Passage)
+                            </button>
+                            <button type="button" class="btn-action" id="toggleUploadModeBtn" onclick="toggleInputMode('upload')">
+                                📄 पाठ्यपुस्तक / PDF अपलोड (Upload Textbook)
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="genAnswerInput">लक्षित उत्तर / मुख्य वाक्यांश (Target Answer — Optional)</label>
-                        <input type="text" id="genAnswerInput" placeholder="उदा. नई दिल्ली, १० मई १८५७ (खाली छोड़ने पर सिस्टम स्वतः महत्वपूर्ण तथ्यों पर कई प्रश्न बनाएगा)">
+                    <!-- PASSAGE GENERATION INPUT SECTION -->
+                    <div id="passageInputSection">
+                        <div class="preset-btns" id="generatePresetContainer"></div>
+
+                        <form id="generateForm" onsubmit="handleAdvancedGenerate(event); return false;">
+                            <div class="form-group">
+                                <label for="genContextInput">हिंदी प्रसंग / पाठ्यपुस्तक अनुच्छेद (Hindi Context Passage) *</label>
+                                <textarea id="genContextInput" placeholder="पाठ्यपुस्तक का एक या अधिक अनुच्छेद यहाँ दर्ज करें..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="genAnswerInput">लक्षित उत्तर / मुख्य वाक्यांश (Target Answer — Optional)</label>
+                                <input type="text" id="genAnswerInput" placeholder="उदा. नई दिल्ली, १० मई १८५७ (खाली छोड़ने पर सिस्टम स्वतः महत्वपूर्ण तथ्यों पर कई प्रश्न बनाएगा)">
+                            </div>
+
+                            <div class="controls-row">
+                                <div>
+                                    <label for="genCategory">प्रश्नों का प्रकार (Category)</label>
+                                    <select id="genCategory">
+                                        <option value="factual" selected>तथ्यात्मक (Factual)</option>
+                                        <option value="conceptual">संकल्पनात्मक (Conceptual)</option>
+                                        <option value="reasoning">तर्क / कारण (Reasoning)</option>
+                                        <option value="hots">उच्च चिंतन (HOTS / Analytical)</option>
+                                        <option value="mcq">बहुविकल्पीय (MCQ with Options)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="genDifficulty">कठिनाई स्तर (Difficulty)</label>
+                                    <select id="genDifficulty">
+                                        <option value="easy">सरल (Easy)</option>
+                                        <option value="medium" selected>मध्यम (Medium)</option>
+                                        <option value="hard">कठिन (Hard)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="genNumQuestions">प्रश्नों की संख्या (Count)</label>
+                                    <select id="genNumQuestions">
+                                        <option value="1">1 प्रश्न (Single Question)</option>
+                                        <option value="3" selected>3 प्रश्न (Standard Set)</option>
+                                        <option value="5">5 प्रश्न (Comprehensive Set)</option>
+                                        <option value="8">8 प्रश्न (Full Set)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="genDecodingStrategy">डिकोडिंग विधि (Strategy)</label>
+                                    <select id="genDecodingStrategy">
+                                        <option value="beam" selected>Beam Search (सटीक / Accurate)</option>
+                                        <option value="sample">Nucleus Sampling (रचनात्मक / Creative)</option>
+                                    </select>
+                                </div>
+                                <div id="genBeamGroup">
+                                    <label for="genNumBeams">Beam Size (1-8)</label>
+                                    <input type="number" id="genNumBeams" min="1" max="8" value="4">
+                                </div>
+                                <div>
+                                    <label for="genMaxLength">अधिकतम लंबाई (Max Tokens)</label>
+                                    <input type="number" id="genMaxLength" min="16" max="128" value="64">
+                                </div>
+                            </div>
+
+                            <button type="submit" id="genSubmitBtn" class="btn-primary">
+                                <span id="genBtnText">✨ Stage 2 LoRA द्वारा प्रश्न उत्पन्न करें (Generate with Stage 2 LoRA)</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- TEXTBOOK UPLOAD INPUT SECTION -->
+                    <div id="uploadInputSection" style="display:none;">
+                        <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px;">
+                            पाठ्यपुस्तक (PDF या TXT) अपलोड करें। सिस्टम अध्याय को संतुलित अंशों में विभाजित कर Stage 2 LoRA मॉडल से प्रश्न बनाएगा। तैयार प्रश्न स्वतः प्रश्न बैंक में सुरक्षित होंगे और क्विज़ में अभ्यास हेतु उपलब्ध होंगे।
+                        </p>
+
+                        <form id="uploadForm" onsubmit="handleTextbookUpload(event); return false;">
+                            <div class="form-group">
+                                <label for="pdfFileInput">पाठ्यपुस्तक फ़ाइल चुनें (.pdf या .txt, अधिकतम 25 MB)</label>
+                                <input type="file" id="pdfFileInput" accept=".pdf,.txt">
+                            </div>
+
+                            <div style="margin: 10px 0; text-align: center; color: var(--text-muted); font-size: 12px;">— अथवा पाठ्यपुस्तक का पूरा पाठ नीचे पेस्ट करें —</div>
+
+                            <div class="form-group">
+                                <label for="chapterTextInput">अध्याय का पूर्ण पाठ (Paste Chapter Text)</label>
+                                <textarea id="chapterTextInput" placeholder="पाठ्यपुस्तक का पूरा पाठ यहाँ पेस्ट कर सकते हैं..."></textarea>
+                            </div>
+
+                            <div class="controls-row">
+                                <div>
+                                    <label for="uploadCategory">प्रश्नों का प्रकार (Category)</label>
+                                    <select id="uploadCategory">
+                                        <option value="factual" selected>तथ्यात्मक (Factual)</option>
+                                        <option value="conceptual">संकल्पनात्मक (Conceptual)</option>
+                                        <option value="reasoning">तर्क / कारण (Reasoning)</option>
+                                        <option value="mcq">बहुविकल्पीय (MCQ)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="uploadDifficulty">कठिनाई (Difficulty)</label>
+                                    <select id="uploadDifficulty">
+                                        <option value="easy">सरल (Easy)</option>
+                                        <option value="medium" selected>मध्यम (Medium)</option>
+                                        <option value="hard">कठिन (Hard)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="uploadQPerChunk">प्रति अंश प्रश्न संख्या (Questions per Chunk)</label>
+                                    <select id="uploadQPerChunk">
+                                        <option value="1">1 प्रश्न (1 Question)</option>
+                                        <option value="2" selected>2 प्रश्न (2 Questions)</option>
+                                        <option value="3">3 प्रश्न (3 Questions)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <button type="submit" id="uploadSubmitBtn" class="btn-primary">
+                                <span id="uploadBtnText">🚀 पाठ्यपुस्तक का विश्लेषण व प्रश्न सृजन करें (Process Textbook & Generate)</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div id="genErrorAlert" class="alert alert-error"></div>
+                    <div id="genSuccessAlert" class="alert alert-success"></div>
+                    <div id="uploadErrorAlert" class="alert alert-error"></div>
+                    <div id="uploadSuccessAlert" class="alert alert-success"></div>
+
+                    <!-- Generated Questions Output List -->
+                    <div id="genResultsContainer" style="display:none; margin-top: 24px;">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <span>📝 उत्पन्न प्रश्न सूची (Generated Questions)</span>
+                                <span id="genCountBadge" class="pill pill-blue"></span>
+                            </div>
+                            <div style="display:flex; gap: 8px; flex-wrap: wrap;">
+                                <button type="button" class="btn-secondary" onclick="saveAllCurrentToBank()">
+                                    💾 सभी प्रश्न बैंक में सुरक्षित करें (Save All to Question Bank)
+                                </button>
+                                <button type="button" class="btn-secondary" onclick="startQuizWithCurrent()">
+                                    🎮 इनसे क्विज़ शुरू करें (Start Quiz with These)
+                                </button>
+                            </div>
+                        </div>
+                        <div id="generatedQuestionsList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBPANE 1B: QUESTION BANK -->
+            <div id="subpaneBank" class="studio-subpane">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📚 संचित प्रश्न बैंक (Persistent Question Bank)</span>
+                        <button type="button" class="btn-secondary" onclick="loadQuestionBank()">
+                            🔄 रिफ्रेश (Refresh)
+                        </button>
+                    </div>
+
+                    <!-- Stats Overview Cards -->
+                    <div id="bankStatsContainer" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px;"></div>
+
+                    <!-- Search and Filters Bar -->
+                    <div style="display:flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px;">
+                        <input type="text" id="bankSearchInput" placeholder="🔍 प्रश्न, उत्तर या प्रसंग खोजें..." style="flex:2; min-width: 200px;" oninput="debounceBankSearch()">
+                        <select id="bankCategoryFilter" style="flex:1; min-width: 140px;" onchange="loadQuestionBank()">
+                            <option value="all">सभी प्रकार (All Categories)</option>
+                            <option value="factual">तथ्यात्मक (Factual)</option>
+                            <option value="conceptual">संकल्पनात्मक (Conceptual)</option>
+                            <option value="reasoning">तर्क / कारण (Reasoning)</option>
+                            <option value="hots">उच्च चिंतन (HOTS)</option>
+                            <option value="mcq">बहुविकल्पीय (MCQ)</option>
+                        </select>
+                        <select id="bankDifficultyFilter" style="flex:1; min-width: 140px;" onchange="loadQuestionBank()">
+                            <option value="all">सभी स्तर (All Difficulties)</option>
+                            <option value="easy">सरल (Easy)</option>
+                            <option value="medium">मध्यम (Medium)</option>
+                            <option value="hard">कठिन (Hard)</option>
+                        </select>
+                    </div>
+
+                    <div id="bankQuestionsList"></div>
+                </div>
+            </div>
+
+            <!-- SUBPANE 1C: QUESTION PAPER BUILDER -->
+            <div id="subpanePaper" class="studio-subpane">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">📝 परीक्षा प्रश्नपत्र निर्माता (Question Paper Builder)</span>
+                        <span id="paperMarksSummary" class="pill pill-blue">कुल अंक: ०</span>
                     </div>
 
                     <div class="controls-row">
                         <div>
-                            <label for="genCategory">प्रश्नों का प्रकार (Category)</label>
-                            <select id="genCategory">
-                                <option value="factual" selected>तथ्यात्मक (Factual)</option>
-                                <option value="conceptual">संकल्पनात्मक (Conceptual)</option>
-                                <option value="reasoning">तर्क / कारण (Reasoning)</option>
-                                <option value="hots">उच्च चिंतन (HOTS / Analytical)</option>
-                                <option value="mcq">बहुविकल्पीय (MCQ with Options)</option>
-                            </select>
+                            <label for="paperSchool">विद्यालय / संस्थान का नाम (School / Board Name)</label>
+                            <input type="text" id="paperSchool" value="केन्द्रीय विद्यालय संगठन (CBSE NCERT)">
                         </div>
                         <div>
-                            <label for="genDifficulty">कठिनाई स्तर (Difficulty)</label>
-                            <select id="genDifficulty">
-                                <option value="easy">सरल (Easy)</option>
-                                <option value="medium" selected>मध्यम (Medium)</option>
-                                <option value="hard">कठिन (Hard)</option>
-                            </select>
+                            <label for="paperTitle">परीक्षा शीर्षक (Exam Title)</label>
+                            <input type="text" id="paperTitle" value="सत्र परीक्षा २०२६ — कक्षा १० हिन्दी">
                         </div>
                         <div>
-                            <label for="genNumQuestions">प्रश्नों की संख्या (Count)</label>
-                            <select id="genNumQuestions">
-                                <option value="1">1 प्रश्न (Single)</option>
-                                <option value="3" selected>3 प्रश्न (Standard)</option>
-                                <option value="5">5 प्रश्न (Comprehensive)</option>
-                                <option value="8">8 प्रश्न (Full Set)</option>
-                            </select>
+                            <label for="paperSubject">कक्षा व विषय (Class & Subject)</label>
+                            <input type="text" id="paperSubject" value="कक्षा १० — हिन्दी 'अ' (क्षितिज / स्पर्श)">
                         </div>
                         <div>
-                            <label for="genDecodingStrategy">डिकोडिंग विधि (Strategy)</label>
-                            <select id="genDecodingStrategy">
-                                <option value="beam" selected>Beam Search (सटीक)</option>
-                                <option value="sample">Nucleus Sampling (रचनात्मक)</option>
-                            </select>
-                        </div>
-                        <div id="genBeamGroup">
-                            <label for="genNumBeams">Beam Size (1-8)</label>
-                            <input type="number" id="genNumBeams" min="1" max="8" value="4">
+                            <label for="paperTime">समय अवधि (Duration)</label>
+                            <input type="text" id="paperTime" value="२:०० घंटे (2 Hours)">
                         </div>
                         <div>
-                            <label for="genMaxLength">अधिकतम लंबाई (Max Tokens)</label>
-                            <input type="number" id="genMaxLength" min="16" max="128" value="64">
+                            <label for="paperTotalMarks">निर्धारित कुल पूर्णांक (Total Marks)</label>
+                            <input type="number" id="paperTotalMarks" value="20" onchange="validatePaperMarks()">
                         </div>
                     </div>
 
-                    <button type="submit" id="genSubmitBtn" class="btn-primary">
-                        <span id="genBtnText">✨ Stage 2 LoRA द्वारा प्रश्न उत्पन्न करें (Generate with Stage 2)</span>
-                    </button>
-                </form>
+                    <div id="paperValidationAlert" class="alert alert-warning"></div>
 
-                <div id="genErrorAlert" class="alert alert-error"></div>
-                <div id="genSuccessAlert" class="alert alert-success"></div>
+                    <!-- Sections Container -->
+                    <div id="paperSectionsContainer"></div>
 
-                <!-- Interactive Evidence & Grounding Passage Viewer -->
-                <div id="passageViewerContainer" style="display:none; margin-top: 24px;">
-                    <div class="card-header">
-                        <span class="card-title">🔍 प्रसंग साक्ष्य दृश्य (Passage Evidence Highlighting)</span>
-                        <span style="font-size: 12px; color: var(--text-muted);">किसी प्रश्न पर क्लिक करने पर उसका आधार वाक्य यहाँ हाइलाइट होगा</span>
+                    <div style="display:flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
+                        <button type="button" class="btn-primary" style="flex:2;" onclick="downloadPaperPDF()">
+                            📄 प्रश्नपत्र PDF डाउनलोड करें (Download Question Paper PDF)
+                        </button>
+                        <button type="button" class="btn-secondary" style="flex:1;" onclick="downloadAnswerKeyPDF()">
+                            🔑 उत्तर कुंजी PDF (Download Answer Key PDF)
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="downloadPaperCSV()">
+                            📊 CSV निर्यात (Export CSV)
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="downloadPaperJSON()">
+                            💾 JSON निर्यात (Export JSON)
+                        </button>
                     </div>
-                    <div id="passageHighlighterBox" class="passage-highlighter-view"></div>
-                </div>
-
-                <!-- Generated Questions Output List -->
-                <div id="genResultsContainer" style="display:none; margin-top: 20px;">
-                    <div class="card-header">
-                        <div class="card-title">
-                            <span>📝 उत्पन्न प्रश्न सूची (Generated Questions)</span>
-                            <span id="genCountBadge" class="pill pill-blue"></span>
-                        </div>
-                        <div style="display:flex; gap: 8px;">
-                            <button type="button" class="btn-secondary" onclick="saveAllCurrentToBank()">💾 सभी प्रश्न बैंक में सुरक्षित करें</button>
-                            <button type="button" class="btn-secondary" onclick="startQuizWithCurrent()">🎮 इनसे क्विज़ शुरू करें</button>
-                        </div>
-                    </div>
-                    <div id="generatedQuestionsList"></div>
                 </div>
             </div>
         </div>
 
         <!-- ========================================== -->
-        <!-- TAB 2: TEXTBOOK UPLOAD & CHUNKING          -->
-        <!-- ========================================== -->
-        <div id="tabUpload" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">📄 पाठ्यपुस्तक अपलोड व अध्याय-वार प्रश्न सृजन (Textbook Chapter Processing)</span>
-                    <span style="font-size: 12px; color: var(--text-muted);">PDF या TXT फ़ाइल अपलोड करें</span>
-                </div>
-                <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px;">
-                    यह सुविधा संपूर्ण पाठ्यपुस्तक या अध्याय को वाक्यों की अखंडता बनाए रखते हुए संतुलित अंशों (chunks) में विभाजित करती है और Stage 2 मॉडल से प्रश्न बनाती है।
-                </p>
-
-                <form id="uploadForm" onsubmit="handleTextbookUpload(event); return false;">
-                    <div class="form-group">
-                        <label for="pdfFileInput">पाठ्यपुस्तक फ़ाइल चुनें (.pdf या .txt, अधिकतम 25 MB)</label>
-                        <input type="file" id="pdfFileInput" accept=".pdf,.txt">
-                    </div>
-
-                    <div style="margin: 10px 0; text-align: center; color: var(--text-muted); font-size: 12px;">— अथवा पाठ्यपुस्तक का पूरा पाठ नीचे पेस्ट करें —</div>
-
-                    <div class="form-group">
-                        <label for="chapterTextInput">अध्याय का पूर्ण पाठ (Paste Chapter Text)</label>
-                        <textarea id="chapterTextInput" placeholder="पाठ्यपुस्तक का पूरा पाठ यहाँ पेस्ट कर सकते हैं..."></textarea>
-                    </div>
-
-                    <div class="controls-row">
-                        <div>
-                            <label for="uploadCategory">प्रश्नों का प्रकार (Category)</label>
-                            <select id="uploadCategory">
-                                <option value="factual" selected>तथ्यात्मक (Factual)</option>
-                                <option value="conceptual">संकल्पनात्मक (Conceptual)</option>
-                                <option value="reasoning">तर्क / कारण (Reasoning)</option>
-                                <option value="mcq">बहुविकल्पीय (MCQ)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="uploadDifficulty">कठिनाई (Difficulty)</label>
-                            <select id="uploadDifficulty">
-                                <option value="easy">सरल (Easy)</option>
-                                <option value="medium" selected>मध्यम (Medium)</option>
-                                <option value="hard">कठिन (Hard)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="uploadQPerChunk">प्रति अंश प्रश्न संख्या (Questions per Chunk)</label>
-                            <select id="uploadQPerChunk">
-                                <option value="1">1 प्रश्न</option>
-                                <option value="2" selected>2 प्रश्न</option>
-                                <option value="3">3 प्रश्न</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <button type="submit" id="uploadSubmitBtn" class="btn-primary">
-                        <span id="uploadBtnText">🚀 पाठ्यपुस्तक का विश्लेषण व प्रश्न सृजन करें (Process Textbook)</span>
-                    </button>
-                </form>
-
-                <div id="uploadErrorAlert" class="alert alert-error"></div>
-                <div id="uploadSuccessAlert" class="alert alert-success"></div>
-
-                <div id="uploadResultsContainer" style="display:none; margin-top: 24px;">
-                    <div class="card-header">
-                        <span class="card-title">📚 विश्लेषित अध्याय परिणाम (Processed Chapter Questions)</span>
-                        <button type="button" class="btn-secondary" onclick="saveUploadQuestionsToBank()">💾 सभी को प्रश्न बैंक में जोड़ें</button>
-                    </div>
-                    <div id="uploadStatsBar" style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;"></div>
-                    <div id="uploadQuestionsList"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- TAB 3: QUESTION BANK & HISTORY             -->
-        <!-- ========================================== -->
-        <div id="tabBank" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">📚 संचित प्रश्न बैंक (Persistent Question Bank)</span>
-                    <button type="button" class="btn-secondary" onclick="loadQuestionBank()">🔄 रिफ्रेश (Refresh)</button>
-                </div>
-
-                <!-- Stats Overview Cards -->
-                <div id="bankStatsContainer" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px;"></div>
-
-                <!-- Search and Filters Bar -->
-                <div style="display:flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px;">
-                    <input type="text" id="bankSearchInput" placeholder="🔍 प्रश्न, उत्तर या प्रसंग खोजें..." style="flex:2; min-width: 200px;" oninput="debounceBankSearch()">
-                    <select id="bankCategoryFilter" style="flex:1; min-width: 140px;" onchange="loadQuestionBank()">
-                        <option value="all">सभी प्रकार (All Categories)</option>
-                        <option value="factual">तथ्यात्मक (Factual)</option>
-                        <option value="conceptual">संकल्पनात्मक (Conceptual)</option>
-                        <option value="reasoning">तर्क / कारण (Reasoning)</option>
-                        <option value="hots">उच्च चिंतन (HOTS)</option>
-                        <option value="mcq">बहुविकल्पीय (MCQ)</option>
-                    </select>
-                    <select id="bankDifficultyFilter" style="flex:1; min-width: 140px;" onchange="loadQuestionBank()">
-                        <option value="all">सभी स्तर (All Difficulties)</option>
-                        <option value="easy">सरल (Easy)</option>
-                        <option value="medium">मध्यम (Medium)</option>
-                        <option value="hard">कठिन (Hard)</option>
-                    </select>
-                </div>
-
-                <div id="bankQuestionsList"></div>
-            </div>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- TAB 4: INTERACTIVE QUIZ & PRACTICE         -->
+        <!-- WORKSPACE 2: PRACTICE & QUIZ               -->
         <!-- ========================================== -->
         <div id="tabQuiz" class="tab-content">
             <div class="card">
@@ -827,100 +852,49 @@
 
                 <div id="quizEmptyState" style="text-align: center; padding: 40px 20px;">
                     <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 16px;">
-                        वर्तमान में कोई क्विज़ लोड नहीं है। 'प्रश्न सृजन' या 'प्रश्न बैंक' से प्रश्नों को क्विज़ में लोड करें।
+                        वर्तमान में कोई क्विज़ लोड नहीं है। पाठ्यपुस्तक अपलोड करने पर या प्रसंग से प्रश्न बनाने पर क्विज़ स्वतः तैयार हो जाती है।
                     </p>
-                    <button type="button" class="btn-primary" style="max-width: 280px; margin: 0 auto;" onclick="loadPresetIntoQuiz()">
-                        📖 पाठ्यपुस्तक प्रश्नों से क्विज़ शुरू करें
+                    <button type="button" class="btn-primary" style="max-width: 380px; margin: 0 auto;" onclick="loadPresetIntoQuiz()">
+                        📖 पाठ्यपुस्तक प्रश्नों से क्विज़ शुरू करें (Start Quiz with Textbook Questions)
                     </button>
                 </div>
 
                 <div id="quizActiveContainer" style="display:none;">
                     <div id="quizQuestionsContainer"></div>
                     <button type="button" id="quizSubmitBtn" class="btn-primary" onclick="submitQuiz()">
-                        📝 उत्तर सबमिट करें व मूल्यांकन देखें (Submit Answers)
+                        📝 उत्तर सबमिट करें व मूल्यांकन देखें (Submit Answers & View Score)
                     </button>
                 </div>
 
                 <!-- Quiz Results & Review Screen -->
                 <div id="quizResultsScreen" style="display:none; margin-top: 24px;">
                     <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 24px; text-align: center; margin-bottom: 24px;">
-                        <h2 style="color: #166534; font-size: 24px; margin-bottom: 8px;">🎯 क्विज़ मूल्यांकन परिणाम</h2>
+                        <h2 style="color: #166534; font-size: 24px; margin-bottom: 8px;">🎯 क्विज़ मूल्यांकन परिणाम (Evaluation Results)</h2>
                         <div id="quizScoreText" style="font-size: 18px; font-weight: 700; color: #1e3a8a; margin-bottom: 12px;"></div>
                         <div style="display:flex; justify-content:center; gap: 12px;">
-                            <button type="button" class="btn-secondary" onclick="retryIncorrectQuestions()">🔄 गलत प्रश्नों का पुनः प्रयास</button>
-                            <button type="button" class="btn-secondary" onclick="restartQuiz()">⏮️ क्विज़ पुनः प्रारंभ</button>
+                            <button type="button" class="btn-secondary" onclick="retryIncorrectQuestions()">
+                                🔄 गलत प्रश्नों का पुनः प्रयास (Retry Incorrect Questions)
+                            </button>
+                            <button type="button" class="btn-secondary" onclick="restartQuiz()">
+                                ⏮️ क्विज़ पुनः प्रारंभ (Restart Quiz)
+                            </button>
                         </div>
                     </div>
 
-                    <h3 style="font-size: 16px; margin-bottom: 14px;">📋 विस्तृत उत्तर समीक्षा व साक्ष्य स्पष्टीकरण:</h3>
+                    <h3 style="font-size: 16px; margin-bottom: 14px;">📋 विस्तृत उत्तर समीक्षा व साक्ष्य स्पष्टीकरण (Detailed Review):</h3>
                     <div id="quizReviewList"></div>
                 </div>
             </div>
         </div>
 
         <!-- ========================================== -->
-        <!-- TAB 5: QUESTION PAPER BUILDER              -->
-        <!-- ========================================== -->
-        <div id="tabPaper" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">📝 परीक्षा प्रश्नपत्र निर्माता (Question Paper Builder)</span>
-                    <span id="paperMarksSummary" class="pill pill-blue">कुल अंक: ०</span>
-                </div>
-
-                <div class="controls-row">
-                    <div>
-                        <label for="paperSchool">विद्यालय / संस्थान का नाम</label>
-                        <input type="text" id="paperSchool" value="केन्द्रीय विद्यालय संगठन">
-                    </div>
-                    <div>
-                        <label for="paperTitle">परीक्षा शीर्षक</label>
-                        <input type="text" id="paperTitle" value="सत्र परीक्षा २०२६ — कक्षा १० हिन्दी">
-                    </div>
-                    <div>
-                        <label for="paperSubject">कक्षा व विषय</label>
-                        <input type="text" id="paperSubject" value="कक्षा १० — हिन्दी 'अ' (क्षितिज / स्पर्श)">
-                    </div>
-                    <div>
-                        <label for="paperTime">समय अवधि</label>
-                        <input type="text" id="paperTime" value="२:०० घंटे">
-                    </div>
-                    <div>
-                        <label for="paperTotalMarks">निर्धारित कुल पूर्णांक</label>
-                        <input type="number" id="paperTotalMarks" value="२०" onchange="validatePaperMarks()">
-                    </div>
-                </div>
-
-                <div id="paperValidationAlert" class="alert alert-warning"></div>
-
-                <!-- Sections Container -->
-                <div id="paperSectionsContainer"></div>
-
-                <div style="display:flex; gap: 10px; margin-top: 20px; flex-wrap: wrap;">
-                    <button type="button" class="btn-primary" style="flex:2;" onclick="downloadPaperPDF()">
-                        📄 प्रश्नपत्र PDF डाउनलोड करें (Student Copy — बिना उत्तर)
-                    </button>
-                    <button type="button" class="btn-secondary" style="flex:1;" onclick="downloadAnswerKeyPDF()">
-                        🔑 उत्तर कुंजी PDF (Answer Key)
-                    </button>
-                    <button type="button" class="btn-secondary" onclick="downloadPaperCSV()">
-                        📊 CSV निर्यात
-                    </button>
-                    <button type="button" class="btn-secondary" onclick="downloadPaperJSON()">
-                        💾 JSON निर्यात
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- TAB 6: MODEL COMPARISON (EXISTING)         -->
+        <!-- WORKSPACE 3: MODEL COMPARISON (STAGE 1 vs STAGE 2) -->
         <!-- ========================================== -->
         <div id="tabCompare" class="tab-content">
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title">⚖️ मॉडल तुलना प्रसंग (Passage Input for Comparison)</span>
-                    <span style="font-size: 12px; color: var(--text-muted);">तीनों मॉडलों को एक साथ एक ही प्रसंग पर परखें</span>
+                    <span class="card-title">⚖️ मॉडल तुलना प्रसंग (Stage 1 Base vs. Stage 2 Adapted LoRA)</span>
+                    <span style="font-size: 12px; color: var(--text-muted);">दोनों उपलब्ध मॉडलों को एक साथ एक ही प्रसंग पर परखें</span>
                 </div>
                 <div class="preset-btns" id="comparePresetContainer"></div>
 
@@ -932,38 +906,41 @@
 
                     <div class="form-group">
                         <label for="compareAnswerInput">लक्षित उत्तर (Target Answer — Optional)</label>
-                        <input type="text" id="compareAnswerInput" placeholder="खाली छोड़ने पर सभी मॉडलों को समान ऑटो-एक्सट्रैक्टेड उत्तरों पर निष्पक्ष रूप से परखा जाएगा">
+                        <input type="text" id="compareAnswerInput" placeholder="खाली छोड़ने पर दोनों मॉडलों को समान ऑटो-एक्सट्रैक्टेड उत्तरों पर निष्पक्ष रूप से परखा जाएगा">
                     </div>
 
-                    <!-- Model Selection Checkboxes -->
+                    <!-- Model Selection Checkboxes: Pure Stage 1 vs Stage 2 -->
                     <div class="form-group">
-                        <div class="model-selection-header">
-                            <label style="font-weight: 600; margin-bottom: 0;">तुलना हेतु मॉडल चुनें (Select Models to Compare) *</label>
-                            <button type="button" class="select-all-btn" id="btnSelectAllAvailable" onclick="selectAllAvailableModels()">
+                        <div class="model-selection-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <label style="font-weight: 600; margin-bottom: 0;">तुलना हेतु मॉडल (Models to Compare) *</label>
+                            <button type="button" class="btn-action" id="btnSelectAllAvailable" onclick="selectAllAvailableModels()">
                                 ✅ सभी उपलब्ध मॉडल चुनें (Select All Available Models)
                             </button>
                         </div>
-                        <div id="modelSelectGroup" class="model-select-group">
-                            <div class="model-checkbox-card" id="card_stage1">
-                                <label class="model-checkbox-item">
-                                    <input type="checkbox" id="chkStage1" value="stage1" checked>
-                                    <span><strong>Stage 1:</strong> IndicBART + IndicNLG QG Base (fine-tuned)</span>
+                        <div id="modelSelectGroup" style="display:flex; flex-direction:column; gap:10px;">
+                            <div class="model-checkbox-card" id="card_stage1" style="border:1px solid var(--border); border-radius:8px; padding:10px 14px; background:#ffffff;">
+                                <label style="margin:0; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        <input type="checkbox" id="chkStage1" value="stage1" checked>
+                                        <div>
+                                            <span style="font-weight:600; color:var(--text);">Stage 1: IndicNLG QG Base (fine-tuned)</span>
+                                            <span style="font-size:12px; color:var(--text-muted); margin-left:6px;">(ai4bharat/IndicBART fine-tuned on general IndicNLG)</span>
+                                        </div>
+                                    </div>
+                                    <span class="pill pill-blue">Stage 1 Base</span>
                                 </label>
                             </div>
-                            <div class="model-checkbox-card" id="card_stage2">
-                                <label class="model-checkbox-item">
-                                    <input type="checkbox" id="chkStage2" value="stage2" checked>
-                                    <span><strong>Stage 2:</strong> NCERT Curriculum Adapted (LoRA)</span>
+                            <div class="model-checkbox-card" id="card_stage2" style="border:1px solid #86efac; border-radius:8px; padding:10px 14px; background:#f0fdf4;">
+                                <label style="margin:0; display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        <input type="checkbox" id="chkStage2" value="stage2" checked>
+                                        <div>
+                                            <span style="font-weight:700; color:#166534;">Stage 2: NCERT Curriculum Adapted (LoRA)</span>
+                                            <span style="font-size:12px; color:#15803d; margin-left:6px;">(Primary Model — LoRA Adapter on Stage 1 Base)</span>
+                                        </div>
+                                    </div>
+                                    <span class="pill pill-green">Stage 2 LoRA</span>
                                 </label>
-                            </div>
-                            <div class="model-checkbox-card unavailable-card" id="card_baseline">
-                                <label class="model-checkbox-item disabled">
-                                    <input type="checkbox" id="chkBaseline" value="baseline" disabled>
-                                    <span style="color:#64748b;"><strong>Original IndicNLG QG Baseline</strong> (अनुपलब्ध / Unavailable)</span>
-                                </label>
-                                <div id="baselineUnavailableNote" class="model-unavailable-note">
-                                    Original IndicNLG question-generation baseline checkpoint is not available (checkpoints/baseline_indicnlg_qg is missing). Pretrained raw IndicBART is intentionally not substituted.
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -972,9 +949,9 @@
                         <div>
                             <label for="compareNumQuestions">प्रश्नों की संख्या (Count)</label>
                             <select id="compareNumQuestions">
-                                <option value="1">1 प्रश्न</option>
-                                <option value="3" selected>3 प्रश्न (Standard)</option>
-                                <option value="5">5 प्रश्न</option>
+                                <option value="1">1 प्रश्न (1 Question)</option>
+                                <option value="3" selected>3 प्रश्न (3 Questions)</option>
+                                <option value="5">5 प्रश्न (5 Questions)</option>
                             </select>
                         </div>
                         <div>
@@ -1005,65 +982,80 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- TAB 7: RESEARCH ANALYTICS DASHBOARD        -->
+        <!-- WORKSPACE 4: RESEARCH & SYSTEM ANALYTICS (100% ENGLISH) -->
         <!-- ========================================== -->
         <div id="tabResearch" class="tab-content">
             <div class="card">
                 <div class="card-header">
-                    <span class="card-title">📊 शोध मूल्यांकन व बेंचमार्क परिणाम (Formal Research Evaluation)</span>
-                    <button type="button" class="btn-secondary" onclick="loadResearchAnalytics()">🔄 Refresh Metrics</button>
+                    <span class="card-title">📊 NLP Research Benchmarks & System Analytics</span>
+                    <div style="display:flex; gap:8px;">
+                        <button type="button" class="btn-secondary" onclick="loadResearchAnalytics()">
+                            🔄 मेट्रिक्स रिफ्रेश करें (Refresh Metrics)
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="loadSystemStatus()">
+                            🔄 सिस्टम स्थिति रिफ्रेश करें (Refresh System Status)
+                        </button>
+                    </div>
                 </div>
-                <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 16px;">
-                    यह तालिका <code>results/model_comparison_results.json</code> से वास्तविक मापे गए सांख्यिकीय परिणामों को प्रदर्शित करती है।
+                <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 20px;">
+                    Empirical evaluation results and verification metadata comparing <strong>Stage 1 Base</strong> (IndicBART general IndicNLG QG) against <strong>Stage 2 Adapted</strong> (NCERT-adapted LoRA adapter).
                 </p>
 
-                <h3 style="font-size: 15px; margin-bottom: 8px;">१. स्वचालित मात्रात्मक मेट्रिक्स (Quantitative Overlap Benchmarks)</h3>
-                <div style="overflow-x:auto;">
+                <!-- 1. Quantitative Benchmarks -->
+                <h3 style="font-size: 16px; margin-bottom: 8px; color: var(--primary);">
+                    1. Automated Quantitative Overlap Benchmarks
+                </h3>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">
+                    Measured against held-out validation pairs using standard NLP evaluation metrics.
+                </p>
+                <div style="overflow-x:auto; margin-bottom: 24px;">
                     <table class="benchmark-table" id="quantTable">
                         <thead>
                             <tr>
-                                <th>मेट्रिक (Metric)</th>
+                                <th>Metric</th>
                                 <th>Stage 1 Base</th>
                                 <th>Stage 2 (NCERT LoRA)</th>
-                                <th>निरपेक्ष अंतर (Absolute Δ)</th>
-                                <th>सापेक्ष सुधार (Relative %)</th>
+                                <th>Absolute Difference (Δ)</th>
+                                <th>Relative Improvement (%)</th>
                             </tr>
                         </thead>
                         <tbody id="quantTableBody"></tbody>
                     </table>
                 </div>
 
-                <h3 style="font-size: 15px; margin-top: 24px; margin-bottom: 8px;">२. मानवीय मूल्यांकन सारांश (Blind Human Evaluation Protocol)</h3>
-                <div style="overflow-x:auto;">
+                <!-- 2. Human Evaluation Summary -->
+                <h3 style="font-size: 16px; margin-top: 24px; margin-bottom: 8px; color: var(--primary);">
+                    2. Blind Human Evaluation Protocol & Linguistic Dimensions
+                </h3>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">
+                    Subject-matter expert scoring across four qualitative pedagogical dimensions (1.0 to 5.0 scale).
+                </p>
+                <div style="overflow-x:auto; margin-bottom: 8px;">
                     <table class="benchmark-table" id="humanTable">
                         <thead>
                             <tr>
-                                <th>मूल्यांकन आयाम (Dimension)</th>
+                                <th>Evaluation Dimension</th>
                                 <th>Stage 1 Base</th>
                                 <th>Stage 2 Adapted</th>
-                                <th>सुधार (Δ)</th>
-                                <th>मापदंड (Rubric)</th>
+                                <th>Improvement (Δ)</th>
+                                <th>Rubric Criteria</th>
                             </tr>
                         </thead>
                         <tbody id="humanTableBody"></tbody>
                     </table>
                 </div>
-                <div id="humanEvalDisclaimer" style="font-size: 12px; color: var(--text-muted); margin-top: 6px;"></div>
+                <div id="humanEvalDisclaimer" style="font-size: 12px; color: var(--text-muted); margin-bottom: 24px;"></div>
 
-                <h3 style="font-size: 15px; margin-top: 24px; margin-bottom: 8px;">३. गुणात्मक त्रुटि विश्लेषण (Qualitative Error Analysis)</h3>
-                <div id="qualitativeAnalysisContainer"></div>
-            </div>
-        </div>
+                <!-- 3. Qualitative Error Analysis -->
+                <h3 style="font-size: 16px; margin-top: 24px; margin-bottom: 8px; color: var(--primary);">
+                    3. Qualitative Linguistic Analysis & Adaptation Findings
+                </h3>
+                <div id="qualitativeAnalysisContainer" style="margin-bottom: 24px;"></div>
 
-        <!-- ========================================== -->
-        <!-- TAB 8: SYSTEM STATUS & VERIFICATION        -->
-        <!-- ========================================== -->
-        <div id="tabStatus" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-title">⚙️ सिस्टम व मॉडल सत्यापन स्थिति (System Status & Verification)</span>
-                    <button type="button" class="btn-secondary" onclick="loadSystemStatus()">🔄 रिफ्रेश (Refresh)</button>
-                </div>
+                <!-- 4. System Status & Verification Card -->
+                <h3 style="font-size: 16px; margin-top: 24px; margin-bottom: 8px; color: var(--primary);" id="systemStatusSectionHeading">
+                    4. System Status, Hardware & Checkpoint Provenance
+                </h3>
                 <div id="systemStatusContent" style="font-size: 14px; line-height: 1.8;"></div>
             </div>
         </div>
@@ -1087,8 +1079,12 @@
                 <input type="text" id="modalEditAnswerText">
             </div>
             <div style="display:flex; justify-content:flex-end; gap:8px;">
-                <button type="button" class="btn-secondary" onclick="closeEditModal()">रद्द करें (Cancel)</button>
-                <button type="button" class="btn-success" onclick="saveEditedQuestion()">सुरक्षित करें (Save Changes)</button>
+                <button type="button" class="btn-secondary" onclick="closeEditModal()">
+                    ❌ रद्द करें (Cancel)
+                </button>
+                <button type="button" class="btn-success" onclick="saveEditedQuestion()">
+                    💾 सुरक्षित करें (Save Changes)
+                </button>
             </div>
         </div>
     </div>
@@ -1101,21 +1097,177 @@
         let QUIZ_STATE = { questions: [], answers: {} };
         let EDITING_QUESTION_ID = null;
 
-        // Tab Switching
+        // ==========================================
+        // CLIENT-SIDE DEVANAGARI UNICODE NORMALIZATION & REPAIR
+        // ==========================================
+        function repairHindiDevanagariText(text) {
+            if (!text) return "";
+            text = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+            const consonants = "\\u0915-\\u0939\\u0958-\\u095F";
+            const vowels = "\\u0904-\\u0914";
+            const allCombining = "\\u0901-\\u0903\\u093A-\\u094F\\u0951-\\u0957\\u0962\\u0963";
+
+            // 1. Remove isolated lines containing only combining marks
+            text = text.replace(new RegExp(`\\n[ \\t]*[${allCombining}]+[ \\t]*(?=\\n|$)`, "g"), "");
+
+            // 2. Fix spaced halant clusters FIRST (e.g. िक्  त -> क्ति)
+            text = text.replace(new RegExp(`([${consonants}]\\u094D)[ \\t]+([${consonants}])`, "g"), "$1$2");
+
+            // 3. Reorder visual short-i (\u093F) placed BEFORE consonant cluster
+            const cluster = `((?:[${consonants}]\\u093C?\\u094D)*[${consonants}]\\u093C?)`;
+            text = text.replace(new RegExp(`\\u093F${cluster}`, "g"), (match, c) => c + "\u093F");
+
+            // 4. Handle hyphenated word splits across newlines: e.g. जीवन-\nसंघर्ष
+            text = text.replace(/-\n\s*/g, "-");
+
+            // 5. Reattach detached combining marks separated from their base consonant/vowel by spaces or newlines:
+            for (let i = 0; i < 4; i++) {
+                text = text.replace(new RegExp(`([${consonants}${vowels}${allCombining}])[ \\t\\r\\n]+([${allCombining}])`, "g"), "$1$2");
+            }
+
+            // 6. Handle syllable splits across newlines where word is cut at anusvara or halant:
+            text = text.replace(new RegExp(`([${consonants}][${allCombining}]*[\\u0902\\u094D])\\n\\s*([${consonants}]+)`, "g"), "$1$2");
+
+            // 7. Convert remaining single newlines between words to a space
+            text = text.replace(/(?<=[^\n])\n(?=[^\n])/g, " ");
+
+            // 8. Remove invalid double vowel matras on same consonant (e.g. ु after ी):
+            text = text.replace(/([\u093E-\u094C])[\u093A-\u094C]+/g, "$1");
+
+            // 9. Remove stray floating combining marks preceded by space and not attached to letters
+            text = text.replace(new RegExp(`(?<=\\s)[${allCombining}]+(?=\\s|$)`, "g"), "");
+
+            // 10. Fix common OCR / legacy font corruptions:
+            text = text.replace(new RegExp(`\\bक\\s{2,}(?=[${consonants}${vowels}])`, "g"), "की ");
+            text = text.replace(/प्रम\s*ं?\s*खता/g, "प्रमुखता");
+            text = text.replace(/म\s*ं?\s*क्ति/g, "मुक्ति");
+            text = text.replace(/संघष\b/g, "संघर्ष");
+            text = text.replace(/स[ंु]\s*दर\b/g, "सुंदर");
+            text = text.replace(/स[ुं]+सार\b/g, "संसार");
+
+            // 11. Space normalization & NFC
+            text = text.replace(/[ \t]+/g, " ");
+            text = text.replace(/\n{3,}/g, "\n\n");
+            if (typeof text.normalize === "function") {
+                text = text.normalize("NFC");
+            }
+            return text.trim();
+        }
+
+        // ==========================================
+        // WORKSPACE & TAB SWITCHING
+        // ==========================================
         function switchTab(tabId) {
+            // Support legacy aliases
+            let targetTab = tabId;
+            let targetSub = null;
+            if (tabId === 'generate' || tabId === 'upload') {
+                targetTab = 'studio';
+                targetSub = 'generate';
+                if (tabId === 'upload') toggleInputMode('upload');
+                else toggleInputMode('passage');
+            } else if (tabId === 'bank') {
+                targetTab = 'studio';
+                targetSub = 'bank';
+            } else if (tabId === 'paper') {
+                targetTab = 'studio';
+                targetSub = 'paper';
+            } else if (tabId === 'status') {
+                targetTab = 'research';
+            }
+
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-            const targetBtn = document.getElementById('tabBtn' + tabId.charAt(0).toUpperCase() + tabId.slice(1));
-            const targetContent = document.getElementById('tab' + tabId.charAt(0).toUpperCase() + tabId.slice(1));
-            if (targetBtn) targetBtn.classList.add('active');
-            if (targetContent) targetContent.classList.add('active');
+            const tabMap = {
+                studio: 'tabStudio',
+                quiz: 'tabQuiz',
+                compare: 'tabCompare',
+                research: 'tabResearch'
+            };
+            const btnMap = {
+                studio: 'tabBtnStudio',
+                quiz: 'tabBtnQuiz',
+                compare: 'tabBtnCompare',
+                research: 'tabBtnResearch'
+            };
 
-            if (tabId === 'bank') loadQuestionBank();
-            else if (tabId === 'research') loadResearchAnalytics();
-            else if (tabId === 'status') loadSystemStatus();
-            else if (tabId === 'compare') loadModelRegistry();
-            else if (tabId === 'paper') renderPaperSections();
+            const contentEl = document.getElementById(tabMap[targetTab]);
+            const btnEl = document.getElementById(btnMap[targetTab]);
+            if (contentEl) contentEl.classList.add('active');
+            if (btnEl) btnEl.classList.add('active');
+
+            if (targetSub) {
+                switchStudioSubTab(targetSub);
+            }
+
+            if (targetTab === 'quiz') {
+                renderQuiz();
+            } else if (targetTab === 'compare') {
+                loadModelRegistry();
+            } else if (targetTab === 'research') {
+                loadResearchAnalytics();
+                loadSystemStatus();
+                if (tabId === 'status') {
+                    const statusHeading = document.getElementById('systemStatusSectionHeading');
+                    if (statusHeading) statusHeading.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }
+
+        function switchStudioSubTab(subId) {
+            document.querySelectorAll('.studio-pill').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.studio-subpane').forEach(p => p.classList.remove('active'));
+
+            const pillMap = {
+                generate: 'pillStudioGenerate',
+                bank: 'pillStudioBank',
+                paper: 'pillStudioPaper'
+            };
+            const paneMap = {
+                generate: 'subpaneGenerate',
+                bank: 'subpaneBank',
+                paper: 'subpanePaper'
+            };
+
+            const targetPill = document.getElementById(pillMap[subId]);
+            const targetPane = document.getElementById(paneMap[subId]);
+            if (targetPill) targetPill.classList.add('active');
+            if (targetPane) targetPane.classList.add('active');
+
+            if (subId === 'bank') loadQuestionBank();
+            else if (subId === 'paper') renderPaperSections();
+        }
+
+        function toggleInputMode(mode) {
+            const pSec = document.getElementById('passageInputSection');
+            const uSec = document.getElementById('uploadInputSection');
+            const pBtn = document.getElementById('togglePassageModeBtn');
+            const uBtn = document.getElementById('toggleUploadModeBtn');
+
+            if (mode === 'upload') {
+                pSec.style.display = 'none';
+                uSec.style.display = 'block';
+                uBtn.style.background = '#eff6ff';
+                uBtn.style.borderColor = '#93c5fd';
+                uBtn.style.color = '#1e40af';
+                uBtn.style.fontWeight = '600';
+                pBtn.style.background = '#ffffff';
+                pBtn.style.borderColor = 'var(--border)';
+                pBtn.style.color = 'var(--text)';
+                pBtn.style.fontWeight = '500';
+            } else {
+                pSec.style.display = 'block';
+                uSec.style.display = 'none';
+                pBtn.style.background = '#eff6ff';
+                pBtn.style.borderColor = '#93c5fd';
+                pBtn.style.color = '#1e40af';
+                pBtn.style.fontWeight = '600';
+                uBtn.style.background = '#ffffff';
+                uBtn.style.borderColor = 'var(--border)';
+                uBtn.style.color = 'var(--text)';
+                uBtn.style.fontWeight = '500';
+            }
         }
 
         // Initialize on DOM load
@@ -1126,8 +1278,20 @@
                 document.getElementById('genContextInput').value = PRESETS[0].context;
                 document.getElementById('compareContextInput').value = PRESETS[0].context;
             }
+
+            // Hook input paste & auto-clean for Devanagari textareas
+            ['genContextInput', 'chapterTextInput', 'compareContextInput'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('paste', (e) => {
+                        setTimeout(() => {
+                            el.value = repairHindiDevanagariText(el.value);
+                        }, 50);
+                    });
+                }
+            });
+
             checkModelHealth();
-            loadModelRegistry();
             initDefaultPaper();
         });
 
@@ -1141,8 +1305,8 @@
                 btn.className = 'preset-btn';
                 btn.textContent = p.title;
                 btn.onclick = () => {
-                    document.getElementById(contextInputId).value = p.context;
-                    document.getElementById(answerInputId).value = p.answer || '';
+                    document.getElementById(contextInputId).value = repairHindiDevanagariText(p.context);
+                    document.getElementById(answerInputId).value = repairHindiDevanagariText(p.answer || '');
                 };
                 container.appendChild(btn);
             });
@@ -1174,8 +1338,14 @@
         // ==========================================
         async function handleAdvancedGenerate(e) {
             if (e && e.preventDefault) e.preventDefault();
-            const context = document.getElementById('genContextInput').value.trim();
-            const answer = document.getElementById('genAnswerInput').value.trim();
+            const rawContext = document.getElementById('genContextInput').value;
+            const context = repairHindiDevanagariText(rawContext);
+            document.getElementById('genContextInput').value = context;
+
+            const rawAnswer = document.getElementById('genAnswerInput').value;
+            const answer = repairHindiDevanagariText(rawAnswer);
+            document.getElementById('genAnswerInput').value = answer;
+
             const category = document.getElementById('genCategory').value;
             const difficulty = document.getElementById('genDifficulty').value;
             const numQuestions = parseInt(document.getElementById('genNumQuestions').value, 10);
@@ -1189,8 +1359,6 @@
             const btnText = document.getElementById('genBtnText');
             const resContainer = document.getElementById('genResultsContainer');
             const list = document.getElementById('generatedQuestionsList');
-            const passageBox = document.getElementById('passageHighlighterBox');
-            const passageContainer = document.getElementById('passageViewerContainer');
 
             errAlert.style.display = 'none';
             succAlert.style.display = 'none';
@@ -1226,17 +1394,13 @@
                 CURRENT_GENERATED_QUESTIONS = data.questions || [];
                 document.getElementById('genCountBadge').textContent = `${CURRENT_GENERATED_QUESTIONS.length} प्रश्न उत्पन्न`;
 
-                // Render questions
+                // Render questions with inline evidence support
                 list.innerHTML = '';
                 CURRENT_GENERATED_QUESTIONS.forEach((q, idx) => {
                     list.appendChild(renderQuestionCard(q, idx, context));
                 });
 
-                // Render Passage Evidence Viewer
-                passageBox.innerHTML = escapeHtml(context);
-                passageContainer.style.display = 'block';
                 resContainer.style.display = 'block';
-
                 succAlert.textContent = `सफलता: Stage 2 LoRA मॉडल ने ${data.latency_ms} ms में प्रश्न उत्पन्न किए।`;
                 succAlert.style.display = 'block';
             } catch (err) {
@@ -1244,10 +1408,13 @@
                 errAlert.style.display = 'block';
             } finally {
                 submitBtn.disabled = false;
-                btnText.innerHTML = '✨ Stage 2 LoRA द्वारा प्रश्न उत्पन्न करें (Generate with Stage 2)';
+                btnText.innerHTML = '✨ Stage 2 LoRA द्वारा प्रश्न उत्पन्न करें (Generate with Stage 2 LoRA)';
             }
         }
 
+        // ==========================================
+        // QUESTION CARD RENDERING (INLINE EVIDENCE)
+        // ==========================================
         function renderQuestionCard(q, idx, fullPassage) {
             const card = document.createElement('div');
             card.className = 'question-card';
@@ -1258,18 +1425,21 @@
             if (isMCQ && q.options) {
                 mcqHtml = `<div class="mcq-options-list">` + q.options.map(opt => `
                     <div class="mcq-opt-item ${opt.key === q.correct_option ? 'correct' : ''}">
-                        <strong>(${opt.key})</strong> ${escapeHtml(opt.text)}
+                        <strong>(${opt.key})</strong> ${escapeHtml(repairHindiDevanagariText(opt.text))}
                         ${opt.key === q.correct_option ? ' ✓ (सही उत्तर)' : ''}
                     </div>
                 `).join('') + `</div>`;
             }
 
             const evidenceBadgeClass = q.evidence_status === 'evidence_found' ? 'pill-green' : (q.evidence_status === 'needs_review' ? 'pill-yellow' : 'pill-red');
+            const cleanQ = repairHindiDevanagariText(q.question);
+            const cleanAns = repairHindiDevanagariText(q.answer || '');
+            const cleanSourceSentence = repairHindiDevanagariText(q.source_sentence || '');
 
             card.innerHTML = `
                 <div class="question-header">
                     <span class="question-num">प्र. ${idx + 1}</span>
-                    <span class="question-text">${escapeHtml(q.question)}</span>
+                    <span class="question-text">${escapeHtml(cleanQ)}</span>
                 </div>
                 <div class="badges-row">
                     <span class="pill pill-blue">${escapeHtml(q.category_label || q.category)}</span>
@@ -1277,193 +1447,85 @@
                     <span class="pill ${evidenceBadgeClass}">${escapeHtml(q.evidence_label || q.evidence_status)} (स्कोर: ${q.answerability_score || '4.0'})</span>
                     <span class="pill pill-green">Stage 2 (LoRA)</span>
                 </div>
-                ${q.answer ? `<div class="target-ans-tag">🎯 <strong>उत्तर:</strong> ${escapeHtml(q.answer)}</div>` : ''}
+                ${cleanAns ? `<div class="target-ans-tag">🎯 <strong>उत्तर:</strong> ${escapeHtml(cleanAns)}</div>` : ''}
                 ${mcqHtml}
-                ${q.source_sentence ? `<div class="evidence-box">📖 <strong>साक्ष्य वाक्य:</strong> "${escapeHtml(q.source_sentence)}"</div>` : ''}
+                ${cleanSourceSentence ? `<div class="evidence-box">📖 <strong>साक्ष्य वाक्य:</strong> "${escapeHtml(cleanSourceSentence)}"</div>` : ''}
+                
+                <!-- Action Buttons with English Translations in Brackets -->
                 <div class="card-actions-bar">
-                    <button type="button" class="btn-action" onclick="highlightEvidenceInPassage('${escapeHtml(q.source_sentence)}')">🔍 प्रसंग में साक्ष्य देखें</button>
-                    <button type="button" class="btn-action" onclick="copySingleQuestion('${escapeHtml(q.question)}')">📋 कॉपी</button>
-                    <button type="button" class="btn-action" onclick="openEditModal('${q.id}')">✏️ संपादित करें</button>
-                    <button type="button" class="btn-action" onclick="saveSingleToBank('${q.id}')">💾 प्रश्न बैंक में जोड़ें</button>
-                    <button type="button" class="btn-action" onclick="addSingleToPaper('${q.id}')">➕ प्रश्नपत्र में जोड़ें</button>
-                    <button type="button" class="btn-action" style="color:#dc2626;" onclick="removeQuestionCard('${q.id}')">🗑️ हटाएं</button>
+                    <button type="button" class="btn-action" onclick="toggleInlineEvidence('${q.id}')">
+                        🔍 संदर्भ में साक्ष्य देखें (See Evidence in Context)
+                    </button>
+                    <button type="button" class="btn-action" onclick="copySingleQuestion('${escapeHtml(cleanQ)}')">
+                        📋 कॉपी करें (Copy)
+                    </button>
+                    <button type="button" class="btn-action" onclick="openEditModal('${q.id}')">
+                        ✏️ संपादित करें (Edit)
+                    </button>
+                    <button type="button" class="btn-action" onclick="saveSingleToBank('${q.id}')">
+                        💾 प्रश्न बैंक में सुरक्षित करें (Save to Question Bank)
+                    </button>
+                    <button type="button" class="btn-action" onclick="addSingleToPaper('${q.id}')">
+                        ➕ प्रश्नपत्र में जोड़ें (Add to Paper)
+                    </button>
+                    <button type="button" class="btn-action" style="color:#dc2626;" onclick="removeQuestionCard('${q.id}')">
+                        🗑️ हटाएं (Delete)
+                    </button>
+                </div>
+
+                <!-- FIX 2: INLINE COLLAPSIBLE EVIDENCE BOX BELOW THE QUESTION -->
+                <div class="evidence-inline-card" id="evidence_inline_${q.id}" style="display:none;">
+                    <div style="font-weight:700; color:#92400e; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                        <span>📌 संदर्भ प्रसंग व साक्ष्य हाइलाइट (Context Passage & Evidence):</span>
+                        <button type="button" class="btn-action" style="padding:2px 8px; font-size:11px;" onclick="toggleInlineEvidence('${q.id}')">
+                            ✕ बंद करें (Close)
+                        </button>
+                    </div>
+                    <div id="evidence_body_${q.id}" style="color:#1e293b;">
+                        ${getHighlightedPassageHtml(fullPassage || q.source_passage, cleanSourceSentence, cleanAns)}
+                    </div>
                 </div>
             `;
             return card;
         }
 
-        function highlightEvidenceInPassage(sentence) {
-            const box = document.getElementById('passageHighlighterBox');
-            const fullText = document.getElementById('genContextInput').value;
-            if (!sentence || !fullText.includes(sentence)) {
-                box.innerHTML = escapeHtml(fullText);
-                return;
-            }
-            const parts = fullText.split(sentence);
-            box.innerHTML = escapeHtml(parts[0]) +
-                `<span class="highlighted-evidence-span">${escapeHtml(sentence)}</span>` +
-                escapeHtml(parts.slice(1).join(sentence));
-            box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        function toggleInlineEvidence(qId) {
+            const box = document.getElementById(`evidence_inline_${qId}`);
+            if (!box) return;
+            box.style.display = (box.style.display === 'none' || !box.style.display) ? 'block' : 'none';
         }
 
-        // ==========================================
-        // FEATURE 2: INTERACTIVE QUIZ & PRACTICE
-        // ==========================================
-        function startQuizWithCurrent() {
-            if (!CURRENT_GENERATED_QUESTIONS.length) return;
-            QUIZ_STATE.questions = JSON.parse(JSON.stringify(CURRENT_GENERATED_QUESTIONS));
-            QUIZ_STATE.answers = {};
-            renderQuiz();
-            switchTab('quiz');
-        }
-
-        function loadPresetIntoQuiz() {
-            // Load preset into single generator first then start
-            if (PRESETS && PRESETS.length > 0) {
-                document.getElementById('genContextInput').value = PRESETS[0].context;
-                handleAdvancedGenerate().then(() => {
-                    startQuizWithCurrent();
-                });
-            }
-        }
-
-        function renderQuiz() {
-            const empty = document.getElementById('quizEmptyState');
-            const active = document.getElementById('quizActiveContainer');
-            const results = document.getElementById('quizResultsScreen');
-            const list = document.getElementById('quizQuestionsContainer');
-
-            results.style.display = 'none';
-            if (!QUIZ_STATE.questions.length) {
-                empty.style.display = 'block';
-                active.style.display = 'none';
-                return;
-            }
-
-            empty.style.display = 'none';
-            active.style.display = 'block';
-            list.innerHTML = '';
-
-            QUIZ_STATE.questions.forEach((q, idx) => {
-                const item = document.createElement('div');
-                item.className = 'question-card';
-                const isMCQ = q.category === 'mcq' || (q.options && q.options.length > 0);
-
-                let inputHtml = '';
-                if (isMCQ && q.options) {
-                    inputHtml = `<div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">` +
-                        q.options.map(opt => `
-                            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:14px; padding:6px; border:1px solid #e2e8f0; border-radius:6px;">
-                                <input type="radio" name="quiz_opt_${q.id}" value="${opt.key}" onchange="recordQuizAnswer('${q.id}', '${opt.key}')">
-                                <strong>(${opt.key})</strong> ${escapeHtml(opt.text)}
-                            </label>
-                        `).join('') + `</div>`;
-                } else {
-                    inputHtml = `
-                        <div style="margin-top:10px;">
-                            <input type="text" placeholder="अपना उत्तर यहाँ हिंदी में दर्ज करें..." oninput="recordQuizAnswer('${q.id}', this.value)">
-                        </div>
-                    `;
+        function getHighlightedPassageHtml(passage, sentence, answer) {
+            if (!passage) return "<em>कोई प्रसंग उपलब्ध नहीं है (No passage available).</em>";
+            let safePassage = escapeHtml(repairHindiDevanagariText(passage));
+            if (sentence) {
+                const cleanSent = escapeHtml(repairHindiDevanagariText(sentence.trim()));
+                if (cleanSent && safePassage.includes(cleanSent)) {
+                    let highlightedSent = `<mark style="background:#fde047; color:#713f12; padding:2px 6px; border-radius:4px; font-weight:600;">${cleanSent}</mark>`;
+                    if (answer) {
+                        const cleanAns = escapeHtml(repairHindiDevanagariText(answer.trim()));
+                        if (cleanAns && cleanSent.includes(cleanAns)) {
+                            const ansMark = `<mark style="background:#86efac; color:#14532d; padding:1px 4px; border-radius:3px; font-weight:700;">${cleanAns}</mark>`;
+                            highlightedSent = cleanSent.split(cleanAns).join(ansMark);
+                            highlightedSent = `<mark style="background:#fde047; color:#713f12; padding:2px 6px; border-radius:4px;">${highlightedSent}</mark>`;
+                        }
+                    }
+                    return safePassage.split(cleanSent).join(highlightedSent);
                 }
-
-                item.innerHTML = `
-                    <div class="question-header">
-                        <span class="question-num">प्रश्न ${idx + 1}</span>
-                        <span class="question-text">${escapeHtml(q.question)}</span>
-                    </div>
-                    ${inputHtml}
-                `;
-                list.appendChild(item);
-            });
-        }
-
-        function recordQuizAnswer(qId, val) {
-            QUIZ_STATE.answers[qId] = val;
-        }
-
-        async function submitQuiz() {
-            try {
-                const resp = await fetch('/api/quiz/evaluate', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        title: "NCERT Class 10 Hindi Practice Quiz",
-                        questions: QUIZ_STATE.questions,
-                        user_answers: QUIZ_STATE.answers
-                    })
-                });
-
-                const data = await resp.json();
-                renderQuizResults(data);
-            } catch (err) {
-                alert("क्विज़ मूल्यांकन में त्रुटि: " + err.message);
             }
-        }
-
-        function renderQuizResults(data) {
-            document.getElementById('quizActiveContainer').style.display = 'none';
-            const screen = document.getElementById('quizResultsScreen');
-            screen.style.display = 'block';
-
-            document.getElementById('quizScoreText').textContent =
-                `अंक: ${data.score} / ${data.total_questions} (${data.percentage}%)`;
-
-            const reviewList = document.getElementById('quizReviewList');
-            reviewList.innerHTML = '';
-
-            data.answers.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'question-card';
-                div.style.borderLeftColor = item.is_correct ? '#16a34a' : '#dc2626';
-
-                div.innerHTML = `
-                    <div class="question-header">
-                        <span class="question-num">${item.question_index}</span>
-                        <span class="question-text">${escapeHtml(item.question_text)}</span>
-                        <span class="pill ${item.is_correct ? 'pill-green' : 'pill-red'}">
-                            ${item.is_correct ? '✓ सही' : '✗ गलत'}
-                        </span>
-                    </div>
-                    <div style="font-size:13px; margin: 6px 0;">
-                        <div><strong>आपका उत्तर:</strong> ${escapeHtml(item.user_answer || '(अनुत्तरित)')}</div>
-                        <div><strong>सही उत्तर:</strong> ${escapeHtml(item.correct_answer)}</div>
-                    </div>
-                    <div class="evidence-box">${escapeHtml(item.explanation)}</div>
-                `;
-                reviewList.appendChild(div);
-            });
-        }
-
-        function restartQuiz() {
-            QUIZ_STATE.answers = {};
-            renderQuiz();
-        }
-
-        function retryIncorrectQuestions() {
-            const incorrectIds = new Set();
-            // find incorrect from last review
-            document.querySelectorAll('#quizReviewList .pill-red').forEach(pill => {
-                const card = pill.closest('.question-card');
-                const qText = card.querySelector('.question-text').textContent;
-                const match = QUIZ_STATE.questions.find(q => q.question === qText);
-                if (match) incorrectIds.add(match.id);
-            });
-            if (incorrectIds.size === 0) {
-                alert("कोई गलत प्रश्न नहीं बचा!");
-                return;
-            }
-            QUIZ_STATE.questions = QUIZ_STATE.questions.filter(q => incorrectIds.has(q.id));
-            QUIZ_STATE.answers = {};
-            renderQuiz();
+            return safePassage;
         }
 
         // ==========================================
-        // FEATURE 4: TEXTBOOK UPLOAD & CHUNKING
+        // FEATURE 4: TEXTBOOK UPLOAD & AUTO-FLOW (FIX 4)
         // ==========================================
         async function handleTextbookUpload(e) {
             if (e && e.preventDefault) e.preventDefault();
             const fileInput = document.getElementById('pdfFileInput');
-            const chapterText = document.getElementById('chapterTextInput').value.trim();
+            const rawChapterText = document.getElementById('chapterTextInput').value;
+            const chapterText = repairHindiDevanagariText(rawChapterText);
+            document.getElementById('chapterTextInput').value = chapterText;
+
             const category = document.getElementById('uploadCategory').value;
             const difficulty = document.getElementById('uploadDifficulty').value;
             const qPerChunk = parseInt(document.getElementById('uploadQPerChunk').value, 10);
@@ -1512,25 +1574,66 @@
                 if (!resp.ok) throw new Error(data.error || 'Textbook processing failed.');
 
                 CURRENT_UPLOAD_QUESTIONS = data.questions || [];
-                succAlert.textContent = `सफलता: फ़ाइल '${data.filename}' से ${data.total_words} शब्द, ${data.processed_chunks} अंशों में विश्लेषित कर कुल ${data.questions_generated} प्रश्न उत्पन्न हुए।`;
+
+                // FIX 4: AUTO-SAVE TO QUESTION BANK
+                let savedToBankCount = 0;
+                try {
+                    const saveResp = await fetch('/api/question_bank', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ questions: CURRENT_UPLOAD_QUESTIONS })
+                    });
+                    const saveData = await saveResp.json();
+                    savedToBankCount = saveData.saved_count || CURRENT_UPLOAD_QUESTIONS.length;
+                } catch (saveErr) {
+                    console.warn("Auto-save to question bank warning:", saveErr);
+                }
+
+                // FIX 4: PRIME PRACTICE & QUIZ IMMEDIATELY WITH THIS TEXTBOOK
+                QUIZ_STATE.questions = JSON.parse(JSON.stringify(CURRENT_UPLOAD_QUESTIONS));
+                QUIZ_STATE.answers = {};
+
+                // Show friendly success banner with quick action navigation buttons
+                succAlert.innerHTML = `
+                    <div style="font-size:14px; margin-bottom:8px;">
+                        ✅ <strong>पाठ्यपुस्तक '${data.filename}' से ${CURRENT_UPLOAD_QUESTIONS.length} प्रश्न सफलतापूर्वक तैयार हुए!</strong>
+                        (कुल शब्द: ${data.total_words}, पृष्ठ: ${data.total_pages})
+                    </div>
+                    <div style="font-size:13px; color:#166534; margin-bottom:12px;">
+                        ये सभी प्रश्न स्वतः <strong>प्रश्न बैंक</strong> में सुरक्षित कर दिए गए हैं और <strong>क्विज़ व अभ्यास</strong> में अभ्यास के लिए तैयार हैं।
+                    </div>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button type="button" class="btn-success" onclick="switchTab('quiz')">
+                            🎮 क्विज़ शुरू करें (Start Practice Quiz Now)
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="switchStudioSubTab('bank')">
+                            📚 प्रश्न बैंक में देखें (View in Question Bank)
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="switchStudioSubTab('paper')">
+                            📝 प्रश्नपत्र में जोड़ें (Add to Paper Builder)
+                        </button>
+                    </div>
+                `;
                 succAlert.style.display = 'block';
 
-                document.getElementById('uploadStatsBar').innerHTML =
-                    `📄 कुल पृष्ठ: ${data.total_pages} | 📝 कुल शब्द: ${data.total_words} | 🧩 विश्लेषित अंश: ${data.processed_chunks} | 🎯 उत्पन्न प्रश्न: ${data.questions_generated}`;
+                // Display questions in generated list
+                const resContainer = document.getElementById('genResultsContainer');
+                const list = document.getElementById('generatedQuestionsList');
+                CURRENT_GENERATED_QUESTIONS = CURRENT_UPLOAD_QUESTIONS;
+                document.getElementById('genCountBadge').textContent = `${CURRENT_GENERATED_QUESTIONS.length} प्रश्न उत्पन्न`;
 
-                const list = document.getElementById('uploadQuestionsList');
                 list.innerHTML = '';
-                CURRENT_UPLOAD_QUESTIONS.forEach((q, idx) => {
+                CURRENT_GENERATED_QUESTIONS.forEach((q, idx) => {
                     list.appendChild(renderQuestionCard(q, idx, q.source_passage));
                 });
+                resContainer.style.display = 'block';
 
-                document.getElementById('uploadResultsContainer').style.display = 'block';
             } catch (err) {
                 errAlert.textContent = "त्रुटि: " + err.message;
                 errAlert.style.display = 'block';
             } finally {
                 submitBtn.disabled = false;
-                btnText.innerHTML = '🚀 पाठ्यपुस्तक का विश्लेषण व प्रश्न सृजन करें (Process Textbook)';
+                btnText.innerHTML = '🚀 पाठ्यपुस्तक का विश्लेषण व प्रश्न सृजन करें (Process Textbook & Generate)';
             }
         }
 
@@ -1545,6 +1648,156 @@
                 reader.onerror = error => reject(error);
                 reader.readAsDataURL(file);
             });
+        }
+
+        // ==========================================
+        // FEATURE 2: INTERACTIVE QUIZ & PRACTICE
+        // ==========================================
+        function startQuizWithCurrent() {
+            if (!CURRENT_GENERATED_QUESTIONS.length) return;
+            QUIZ_STATE.questions = JSON.parse(JSON.stringify(CURRENT_GENERATED_QUESTIONS));
+            QUIZ_STATE.answers = {};
+            renderQuiz();
+            switchTab('quiz');
+        }
+
+        function loadPresetIntoQuiz() {
+            if (PRESETS && PRESETS.length > 0) {
+                document.getElementById('genContextInput').value = PRESETS[0].context;
+                handleAdvancedGenerate().then(() => {
+                    startQuizWithCurrent();
+                });
+            }
+        }
+
+        function renderQuiz() {
+            const empty = document.getElementById('quizEmptyState');
+            const active = document.getElementById('quizActiveContainer');
+            const results = document.getElementById('quizResultsScreen');
+            const list = document.getElementById('quizQuestionsContainer');
+
+            results.style.display = 'none';
+            if (!QUIZ_STATE.questions.length) {
+                empty.style.display = 'block';
+                active.style.display = 'none';
+                return;
+            }
+
+            empty.style.display = 'none';
+            active.style.display = 'block';
+            list.innerHTML = '';
+
+            QUIZ_STATE.questions.forEach((q, idx) => {
+                const item = document.createElement('div');
+                item.className = 'question-card';
+                const isMCQ = q.category === 'mcq' || (q.options && q.options.length > 0);
+                const cleanQ = repairHindiDevanagariText(q.question);
+
+                let inputHtml = '';
+                if (isMCQ && q.options) {
+                    inputHtml = `<div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">` +
+                        q.options.map(opt => `
+                            <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:14px; padding:6px; border:1px solid #e2e8f0; border-radius:6px;">
+                                <input type="radio" name="quiz_opt_${q.id}" value="${opt.key}" onchange="recordQuizAnswer('${q.id}', '${opt.key}')">
+                                <strong>(${opt.key})</strong> ${escapeHtml(repairHindiDevanagariText(opt.text))}
+                            </label>
+                        `).join('') + `</div>`;
+                } else {
+                    inputHtml = `
+                        <div style="margin-top:10px;">
+                            <input type="text" placeholder="अपना उत्तर यहाँ हिंदी में दर्ज करें..." oninput="recordQuizAnswer('${q.id}', this.value)">
+                        </div>
+                    `;
+                }
+
+                item.innerHTML = `
+                    <div class="question-header">
+                        <span class="question-num">प्रश्न ${idx + 1}</span>
+                        <span class="question-text">${escapeHtml(cleanQ)}</span>
+                    </div>
+                    ${inputHtml}
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function recordQuizAnswer(qId, val) {
+            QUIZ_STATE.answers[qId] = repairHindiDevanagariText(val);
+        }
+
+        async function submitQuiz() {
+            try {
+                const resp = await fetch('/api/quiz/evaluate', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        title: "NCERT Class 10 Hindi Practice Quiz",
+                        questions: QUIZ_STATE.questions,
+                        user_answers: QUIZ_STATE.answers
+                    })
+                });
+
+                const data = await resp.json();
+                renderQuizResults(data);
+            } catch (err) {
+                alert("क्विज़ मूल्यांकन में त्रुटि: " + err.message);
+            }
+        }
+
+        function renderQuizResults(data) {
+            document.getElementById('quizActiveContainer').style.display = 'none';
+            const screen = document.getElementById('quizResultsScreen');
+            screen.style.display = 'block';
+
+            document.getElementById('quizScoreText').textContent =
+                `अंक: ${data.score} / ${data.total_questions} (${data.percentage}%)`;
+
+            const reviewList = document.getElementById('quizReviewList');
+            reviewList.innerHTML = '';
+
+            data.answers.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'question-card';
+                div.style.borderLeftColor = item.is_correct ? '#16a34a' : '#dc2626';
+
+                div.innerHTML = `
+                    <div class="question-header">
+                        <span class="question-num">${item.question_index}</span>
+                        <span class="question-text">${escapeHtml(repairHindiDevanagariText(item.question_text))}</span>
+                        <span class="pill ${item.is_correct ? 'pill-green' : 'pill-red'}">
+                            ${item.is_correct ? '✓ सही' : '✗ गलत'}
+                        </span>
+                    </div>
+                    <div style="font-size:13px; margin: 6px 0;">
+                        <div><strong>आपका उत्तर:</strong> ${escapeHtml(item.user_answer || '(अनुत्तरित)')}</div>
+                        <div><strong>सही उत्तर:</strong> ${escapeHtml(item.correct_answer)}</div>
+                    </div>
+                    <div class="evidence-box">${escapeHtml(item.explanation)}</div>
+                `;
+                reviewList.appendChild(div);
+            });
+        }
+
+        function restartQuiz() {
+            QUIZ_STATE.answers = {};
+            renderQuiz();
+        }
+
+        function retryIncorrectQuestions() {
+            const incorrectIds = new Set();
+            document.querySelectorAll('#quizReviewList .pill-red').forEach(pill => {
+                const card = pill.closest('.question-card');
+                const qText = card.querySelector('.question-text').textContent;
+                const match = QUIZ_STATE.questions.find(q => repairHindiDevanagariText(q.question) === qText);
+                if (match) incorrectIds.add(match.id);
+            });
+            if (incorrectIds.size === 0) {
+                alert("कोई गलत प्रश्न नहीं बचा! (All questions answered correctly)");
+                return;
+            }
+            QUIZ_STATE.questions = QUIZ_STATE.questions.filter(q => incorrectIds.has(q.id));
+            QUIZ_STATE.answers = {};
+            renderQuiz();
         }
 
         // ==========================================
@@ -1587,7 +1840,7 @@
             container.innerHTML = `
                 <div style="background:#eff6ff; padding:12px; border-radius:8px; text-align:center;">
                     <div style="font-size:20px; font-weight:700; color:#1e40af;">${stats.total_questions || 0}</div>
-                    <div style="font-size:12px; color:#475569;">कुल संचित प्रश्न</div>
+                    <div style="font-size:12px; color:#475569;">कुल संचित प्रश्न (Total)</div>
                 </div>
                 <div style="background:#f0fdf4; padding:12px; border-radius:8px; text-align:center;">
                     <div style="font-size:20px; font-weight:700; color:#166534;">${(stats.by_category && stats.by_category.mcq) || 0}</div>
@@ -1595,11 +1848,11 @@
                 </div>
                 <div style="background:#fef3c7; padding:12px; border-radius:8px; text-align:center;">
                     <div style="font-size:20px; font-weight:700; color:#b45309;">${(stats.by_category && stats.by_category.reasoning) || 0}</div>
-                    <div style="font-size:12px; color:#475569;">तर्क आधारित</div>
+                    <div style="font-size:12px; color:#475569;">तर्क आधारित (Reasoning)</div>
                 </div>
                 <div style="background:#f3e8ff; padding:12px; border-radius:8px; text-align:center;">
                     <div style="font-size:20px; font-weight:700; color:#7e22ce;">${(stats.by_category && stats.by_category.hots) || 0}</div>
-                    <div style="font-size:12px; color:#475569;">HOTS चिंतन</div>
+                    <div style="font-size:12px; color:#475569;">उच्च चिंतन (HOTS)</div>
                 </div>
             `;
         }
@@ -1622,7 +1875,7 @@
                     body: JSON.stringify(q)
                 });
                 if (resp.ok) {
-                    alert("प्रश्न बैंक में सफलतापूर्वक सुरक्षित हुआ!");
+                    alert("प्रश्न बैंक में सफलतापूर्वक सुरक्षित हुआ! (Saved to Question Bank)");
                 }
             } catch (err) {
                 alert("सुरक्षित करने में त्रुटि: " + err.message);
@@ -1638,23 +1891,7 @@
                     body: JSON.stringify({ questions: CURRENT_GENERATED_QUESTIONS })
                 });
                 if (resp.ok) {
-                    alert(`सभी ${CURRENT_GENERATED_QUESTIONS.length} प्रश्न बैंक में सुरक्षित हो गए!`);
-                }
-            } catch (err) {
-                alert("त्रुटि: " + err.message);
-            }
-        }
-
-        async function saveUploadQuestionsToBank() {
-            if (!CURRENT_UPLOAD_QUESTIONS.length) return;
-            try {
-                const resp = await fetch('/api/question_bank', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ questions: CURRENT_UPLOAD_QUESTIONS })
-                });
-                if (resp.ok) {
-                    alert(`सभी ${CURRENT_UPLOAD_QUESTIONS.length} प्रश्न बैंक में सुरक्षित हो गए!`);
+                    alert(`सभी ${CURRENT_GENERATED_QUESTIONS.length} प्रश्न बैंक में सुरक्षित हो गए! (All questions saved to bank)`);
                 }
             } catch (err) {
                 alert("त्रुटि: " + err.message);
@@ -1704,11 +1941,12 @@
             copy.section = copy.category === 'mcq' ? 'A' : (copy.category === 'hots' ? 'C' : 'B');
             ACTIVE_PAPER_QUESTIONS.push(copy);
             renderPaperSections();
-            alert("प्रश्न को परीक्षा प्रश्नपत्र में जोड़ दिया गया!");
+            alert("प्रश्न को परीक्षा प्रश्नपत्र में जोड़ दिया गया! (Added to Question Paper)");
         }
 
         function renderPaperSections() {
             const container = document.getElementById('paperSectionsContainer');
+            if (!container) return;
             container.innerHTML = '';
 
             const sections = [
@@ -1746,12 +1984,12 @@
                     qDiv.innerHTML = `
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <div>
-                                <strong>प्र. ${idx + 1}.</strong> ${escapeHtml(q.question)}
+                                <strong>प्र. ${idx + 1}.</strong> ${escapeHtml(repairHindiDevanagariText(q.question))}
                             </div>
                             <div style="display:flex; align-items:center; gap:8px;">
                                 <label style="font-size:12px; margin:0;">अंक:</label>
                                 <input type="number" min="1" max="10" value="${q.marks || 1}" style="width:55px; padding:4px;" onchange="updateQuestionMarks('${q.id}', this.value)">
-                                <button type="button" class="btn-action" style="color:#dc2626;" onclick="removePaperQuestion('${q.id}')">✕</button>
+                                <button type="button" class="btn-action" style="color:#dc2626;" onclick="removePaperQuestion('${q.id}')">✕ हटाएं (Remove)</button>
                             </div>
                         </div>
                     `;
@@ -1870,7 +2108,123 @@
         }
 
         // ==========================================
-        // FEATURE 7: RESEARCH ANALYTICS
+        // FEATURE 8: MODEL COMPARISON (PURE STAGE 1 vs STAGE 2)
+        // ==========================================
+        async function loadModelRegistry() {
+            // Models to compare: Stage 1 and Stage 2
+            const chk1 = document.getElementById('chkStage1');
+            const chk2 = document.getElementById('chkStage2');
+            if (chk1) chk1.checked = true;
+            if (chk2) chk2.checked = true;
+        }
+
+        function selectAllAvailableModels() {
+            document.querySelectorAll('#modelSelectGroup input[type="checkbox"]').forEach(cb => {
+                cb.checked = !cb.disabled;
+            });
+        }
+
+        async function handleCompareGenerate(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            const rawContext = document.getElementById('compareContextInput').value;
+            const context = repairHindiDevanagariText(rawContext);
+            document.getElementById('compareContextInput').value = context;
+
+            const rawAnswer = document.getElementById('compareAnswerInput').value;
+            const answer = repairHindiDevanagariText(rawAnswer);
+            document.getElementById('compareAnswerInput').value = answer;
+
+            const numQuestions = parseInt(document.getElementById('compareNumQuestions').value, 10);
+            const numBeams = parseInt(document.getElementById('compareNumBeams').value, 10);
+            const maxLength = parseInt(document.getElementById('compareMaxLength').value, 10);
+
+            const selectedModels = [];
+            document.querySelectorAll('#modelSelectGroup input[type="checkbox"]:checked:not(:disabled)').forEach(cb => {
+                selectedModels.push(cb.value);
+            });
+
+            const errAlert = document.getElementById('compareErrorAlert');
+            const warnAlert = document.getElementById('compareWarnAlert');
+            const btn = document.getElementById('compareGenerateBtn');
+            const btnText = document.getElementById('compareBtnText');
+
+            errAlert.style.display = 'none';
+            warnAlert.style.display = 'none';
+
+            if (!context) {
+                errAlert.textContent = "तुलना के लिए पाठ्यपुस्तक प्रसंग आवश्यक है। (Context passage is required)";
+                errAlert.style.display = 'block';
+                return;
+            }
+            if (selectedModels.length === 0) {
+                errAlert.textContent = "कृपया तुलना के लिए कम से कम एक उपलब्ध मॉडल चुनें। (Select at least one available model)";
+                errAlert.style.display = 'block';
+                return;
+            }
+
+            btn.disabled = true;
+            btnText.innerHTML = '<span class="spinner"></span> दोनों मॉडलों से तुलना जारी है...';
+
+            try {
+                const resp = await fetch('/api/compare', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        context: context,
+                        answer: answer,
+                        models: selectedModels,
+                        num_questions: numQuestions,
+                        num_beams: numBeams,
+                        max_length: maxLength
+                    })
+                });
+
+                const data = await resp.json();
+                renderComparisonGrid(data);
+                document.getElementById('compareResultsContainer').style.display = 'block';
+            } catch (err) {
+                errAlert.textContent = "तुलना त्रुटि: " + err.message;
+                errAlert.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btnText.innerHTML = '⚖️ मॉडलों की तुलना करें (Compare Models)';
+            }
+        }
+
+        function renderComparisonGrid(data) {
+            const grid = document.getElementById('compareGrid');
+            grid.innerHTML = '';
+            const results = data.results || {};
+
+            for (const [mid, res] of Object.entries(results)) {
+                if (mid === 'baseline') continue; // baseline removed
+                const card = document.createElement('div');
+                const isAdapted = mid === 'stage2';
+                card.className = `model-card ${isAdapted ? 'adapted' : 'baseline'}`;
+
+                let qsHtml = (res.questions || []).map((q, idx) => `
+                    <div class="question-card" style="margin:6px 0;">
+                        <strong>${idx + 1}.</strong> ${escapeHtml(repairHindiDevanagariText(q.question))}
+                        ${q.answer ? `<div style="font-size:12px; color:#475569;">🎯 उत्तर: ${escapeHtml(repairHindiDevanagariText(q.answer))}</div>` : ''}
+                    </div>
+                `).join('');
+
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #e2e8f0;">
+                        <div>
+                            <div style="font-weight:700; font-size:15px;">${escapeHtml(res.name || mid)}</div>
+                            <div style="font-size:11px; color:#64748b;">${escapeHtml(res.checkpoint || '')}</div>
+                        </div>
+                        <span class="pill ${isAdapted ? 'pill-green' : 'pill-blue'}">⏱️ ${res.latency_ms || 0} ms</span>
+                    </div>
+                    <div>${qsHtml}</div>
+                `;
+                grid.appendChild(card);
+            }
+        }
+
+        // ==========================================
+        // FEATURE 7: RESEARCH & SYSTEM ANALYTICS (100% IN ENGLISH)
         // ==========================================
         async function loadResearchAnalytics() {
             try {
@@ -1906,10 +2260,10 @@
                 const hCats = hData.categories || {};
 
                 const rubrics = {
-                    naturalness: "प्राकृतिक हिंदी प्रवाह व मुहावरेदार शैली",
-                    relevance: "प्रसंग से सीधा संबंध",
-                    answerability: "प्रसंग के आधार पर सीधे उत्तर देने की क्षमता",
-                    factual_consistency: "काल्पनिक तथ्यों व भ्रामक जानकारी से मुक्ति"
+                    naturalness: "Natural Hindi phrasing, pedagogical fluency, and textbook idiom",
+                    relevance: "Contextual grounding and topic alignment with the source textbook passage",
+                    answerability: "Direct resolvability of the question strictly from the provided text",
+                    factual_consistency: "Absence of hallucinated entities or factually ungrounded premises"
                 };
 
                 for (const [dim, vals] of Object.entries(hCats)) {
@@ -1917,7 +2271,7 @@
                     const s1Text = (typeof vals.stage1 === 'number') ? `${vals.stage1} / 5.0` : vals.stage1;
                     const s2Text = (typeof vals.stage2 === 'number') ? `${vals.stage2} / 5.0` : vals.stage2;
                     tr.innerHTML = `
-                        <td><strong>${dim}</strong></td>
+                        <td><strong>${dim.charAt(0).toUpperCase() + dim.slice(1).replace('_', ' ')}</strong></td>
                         <td>${escapeHtml(String(s1Text))}</td>
                         <td><strong>${escapeHtml(String(s2Text))}</strong></td>
                         <td style="color:${vals.delta === 'N/A' ? '#64748b' : '#166534'}; font-weight:600;">${escapeHtml(vals.delta)}</td>
@@ -1939,8 +2293,8 @@
                     box.style.marginBottom = '10px';
                     box.innerHTML = `
                         <div style="font-weight:700; color:var(--primary); font-size:14px; margin-bottom:4px;">${escapeHtml(item.category)}</div>
-                        <div style="font-size:13px; color:#475569; margin-bottom:4px;">⚠️ <strong>पूर्व समस्या (Stage 1):</strong> ${escapeHtml(item.observation)}</div>
-                        <div style="font-size:13px; color:#166534;">✅ <strong>Stage 2 LoRA अनुकूलन प्रभाव:</strong> ${escapeHtml(item.adaptation_impact)}</div>
+                        <div style="font-size:13px; color:#475569; margin-bottom:4px;">⚠️ <strong>Baseline Limitation (Stage 1):</strong> ${escapeHtml(item.observation)}</div>
+                        <div style="font-size:13px; color:#166534;">✅ <strong>Stage 2 LoRA Adaptation Impact:</strong> ${escapeHtml(item.adaptation_impact)}</div>
                     `;
                     qualContainer.appendChild(box);
                 });
@@ -1949,188 +2303,6 @@
             }
         }
 
-        // ==========================================
-        // FEATURE 8: MODEL COMPARISON (EXISTING)
-        // ==========================================
-        async function loadModelRegistry() {
-            try {
-                const resp = await fetch('/api/models');
-                const registry = await resp.json();
-                renderModelSelectionCheckboxes(registry);
-            } catch (err) {
-                console.warn('Could not load dynamic model registry:', err);
-            }
-        }
-
-        function renderModelSelectionCheckboxes(registry) {
-            const container = document.getElementById('modelSelectGroup');
-            if (!container || !registry) return;
-
-            container.innerHTML = '';
-            const preferredOrder = ['stage1', 'stage2', 'baseline'];
-
-            preferredOrder.forEach(mid => {
-                const info = registry[mid];
-                if (!info) return;
-                const isAvailable = info.status === 'available';
-
-                let chkId = 'chk_' + mid;
-                if (mid === 'stage1') chkId = 'chkStage1';
-                else if (mid === 'stage2') chkId = 'chkStage2';
-                else if (mid === 'baseline') chkId = 'chkBaseline';
-
-                const card = document.createElement('div');
-                card.className = `model-checkbox-card ${isAvailable ? '' : 'unavailable-card'}`;
-
-                const badgeBg = info.badge_color || (mid === 'stage1' ? '#0d6efd' : (mid === 'stage2' ? '#198754' : '#6c757d'));
-                const tagLabel = info.tag || mid;
-                const statusPill = isAvailable
-                    ? '<span class="pill pill-green">उपलब्ध</span>'
-                    : '<span class="pill pill-red">अनुपलब्ध</span>';
-
-                let explanationHtml = '';
-                if (!isAvailable) {
-                    explanationHtml = `
-                        <div class="model-unavailable-note">
-                            <strong>⚠️ अनुपलब्ध रहने का कारण:</strong> ${escapeHtml(info.unavailable_reason || 'चेकपॉइंट डिस्क पर उपलब्ध नहीं है।')}
-                        </div>
-                    `;
-                }
-
-                card.innerHTML = `
-                    <label class="model-checkbox-item ${isAvailable ? '' : 'disabled'}" style="margin:0; width:100%; display:flex; justify-content:space-between; align-items:center;">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <input type="checkbox" id="${chkId}" value="${mid}" class="model-checkbox"
-                                   ${isAvailable ? 'checked' : ''} ${isAvailable ? '' : 'disabled'}>
-                            <div>
-                                <span style="font-weight:600; color:${isAvailable ? 'var(--text)' : '#64748b'};">
-                                    ${escapeHtml(info.name_hi || info.name)}
-                                </span>
-                                <span style="font-size:12px; color:var(--text-muted); margin-left:6px;">
-                                    (${escapeHtml(info.name)})
-                                </span>
-                            </div>
-                        </div>
-                        <div style="display:flex; align-items:center; gap:6px;">
-                            <span class="pill" style="background:${badgeBg}; color:white;">${escapeHtml(tagLabel)}</span>
-                            ${statusPill}
-                        </div>
-                    </label>
-                    ${explanationHtml}
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function selectAllAvailableModels() {
-            document.querySelectorAll('#modelSelectGroup input[type="checkbox"]').forEach(cb => {
-                cb.checked = !cb.disabled;
-            });
-        }
-
-        async function handleCompareGenerate(e) {
-            if (e && e.preventDefault) e.preventDefault();
-            const context = document.getElementById('compareContextInput').value.trim();
-            const answer = document.getElementById('compareAnswerInput').value.trim();
-            const numQuestions = parseInt(document.getElementById('compareNumQuestions').value, 10);
-            const numBeams = parseInt(document.getElementById('compareNumBeams').value, 10);
-            const maxLength = parseInt(document.getElementById('compareMaxLength').value, 10);
-
-            const selectedModels = [];
-            document.querySelectorAll('#modelSelectGroup input[type="checkbox"]:checked:not(:disabled)').forEach(cb => {
-                selectedModels.push(cb.value);
-            });
-
-            const errAlert = document.getElementById('compareErrorAlert');
-            const warnAlert = document.getElementById('compareWarnAlert');
-            const btn = document.getElementById('compareGenerateBtn');
-            const btnText = document.getElementById('compareBtnText');
-
-            errAlert.style.display = 'none';
-            warnAlert.style.display = 'none';
-
-            if (!context) {
-                errAlert.textContent = "तुलना के लिए पाठ्यपुस्तक प्रसंग आवश्यक है।";
-                errAlert.style.display = 'block';
-                return;
-            }
-            if (selectedModels.length === 0) {
-                errAlert.textContent = "कृपया तुलना के लिए कम से कम एक उपलब्ध मॉडल चुनें।";
-                errAlert.style.display = 'block';
-                return;
-            }
-
-            btn.disabled = true;
-            btnText.innerHTML = '<span class="spinner"></span> सभी मॉडलों से तुलना जारी है...';
-
-            try {
-                const resp = await fetch('/api/compare', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        context: context,
-                        answer: answer,
-                        models: selectedModels,
-                        num_questions: numQuestions,
-                        num_beams: numBeams,
-                        max_length: maxLength
-                    })
-                });
-
-                const data = await resp.json();
-                renderComparisonGrid(data);
-                document.getElementById('compareResultsContainer').style.display = 'block';
-            } catch (err) {
-                errAlert.textContent = "तुलना त्रुटि: " + err.message;
-                errAlert.style.display = 'block';
-            } finally {
-                btn.disabled = false;
-                btnText.innerHTML = '⚖️ मॉडलों की तुलना करें (Compare Models)';
-            }
-        }
-
-        function renderComparisonGrid(data) {
-            const grid = document.getElementById('compareGrid');
-            grid.innerHTML = '';
-            const results = data.results || {};
-
-            for (const [mid, res] of Object.entries(results)) {
-                const card = document.createElement('div');
-                const isAdapted = mid === 'stage2';
-                const isUnavailable = res.status === 'unavailable';
-                card.className = `model-card ${isAdapted ? 'adapted' : (isUnavailable ? 'unavailable' : 'baseline')}`;
-
-                let qsHtml = '';
-                if (isUnavailable) {
-                    qsHtml = `<div style="font-size:13px; color:#92400e; padding:10px; background:#fffbeb; border-radius:6px;">
-                        <strong>अनुपलब्ध:</strong> ${escapeHtml(res.error || 'चेकपॉइंट डिस्क पर उपलब्ध नहीं है।')}
-                    </div>`;
-                } else {
-                    qsHtml = (res.questions || []).map((q, idx) => `
-                        <div class="question-card" style="margin:6px 0;">
-                            <strong>${idx + 1}.</strong> ${escapeHtml(q.question)}
-                            ${q.answer ? `<div style="font-size:12px; color:#475569;">🎯 उत्तर: ${escapeHtml(q.answer)}</div>` : ''}
-                        </div>
-                    `).join('');
-                }
-
-                card.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid #e2e8f0;">
-                        <div>
-                            <div style="font-weight:700; font-size:15px;">${escapeHtml(res.name || mid)}</div>
-                            <div style="font-size:11px; color:#64748b;">${escapeHtml(res.checkpoint || '')}</div>
-                        </div>
-                        <span class="pill ${isAdapted ? 'pill-green' : 'pill-blue'}">⏱️ ${res.latency_ms || 0} ms</span>
-                    </div>
-                    <div>${qsHtml}</div>
-                `;
-                grid.appendChild(card);
-            }
-        }
-
-        // ==========================================
-        // FEATURE 9: SYSTEM STATUS & VERIFICATION
-        // ==========================================
         async function loadSystemStatus() {
             const container = document.getElementById('systemStatusContent');
             try {
@@ -2140,32 +2312,34 @@
 
                 container.innerHTML = `
                     <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:16px; margin-bottom:16px;">
-                        <h4 style="color:#166534; margin-bottom:8px;">✅ प्राथमिक सृजन मॉडल सत्यापन (Primary Model Verification)</h4>
-                        <div><strong>मॉडल पहचानकर्ता (ID):</strong> <code>${data.active_model_id}</code></div>
-                        <div><strong>मॉडल का नाम:</strong> ${data.active_model_name}</div>
-                        <div><strong>सक्रिय हार्डवेयर डिवाइस:</strong> <code>${data.device}</code></div>
-                        <div><strong>LoRA अनुकूलक स्थिति:</strong> ${data.is_lora_active ? '🟢 सक्रिय (Active & Ready)' : '🟡 निष्क्रिय'}</div>
+                        <h4 style="color:#166534; margin-bottom:8px;">✅ Primary Question Generation Model Verification</h4>
+                        <div><strong>Active Model Identifier:</strong> <code>${data.active_model_id}</code></div>
+                        <div><strong>Model Display Name:</strong> ${data.active_model_name}</div>
+                        <div><strong>Compute Execution Device:</strong> <code>${data.device}</code></div>
+                        <div><strong>LoRA Adapter Status:</strong> ${data.is_lora_active ? '🟢 Active & Ready (PEFT LoRA Loaded)' : '🟡 Inactive'}</div>
                     </div>
 
                     <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:16px;">
-                        <h4 style="margin-bottom:8px;">📁 डिस्क चेकपॉइंट संरचना (On-Disk Checkpoints)</h4>
-                        <div><strong>Stage 1 Base Checkpoint:</strong> <code>${ver.stage1_dir || 'checkpoints/stage1_indicnlg_qg'}</code> (${ver.stage1_available ? 'उपलब्ध' : 'अनुपलब्ध'})</div>
-                        <div><strong>Stage 2 LoRA Adapter:</strong> <code>${ver.stage2_dir || 'checkpoints/stage2_ncert_gold_lora'}</code> (${ver.stage2_available ? 'उपलब्ध' : 'अनुपलब्ध'})</div>
+                        <h4 style="margin-bottom:8px;">📁 Checkpoint Storage & Architecture Details</h4>
+                        <div><strong>Stage 1 Base Checkpoint:</strong> <code>${ver.stage1_dir || 'checkpoints/stage1_indicnlg_qg'}</code> (${ver.stage1_available ? 'Available' : 'Missing'})</div>
+                        <div><strong>Stage 2 LoRA Adapter Checkpoint:</strong> <code>${ver.stage2_dir || 'checkpoints/stage2_ncert_gold_lora'}</code> (${ver.stage2_available ? 'Available' : 'Missing'})</div>
                         ${ver.adapter_config ? `
                             <div style="margin-top:8px; font-size:13px; color:#475569;">
-                                • LoRA Rank: ${ver.adapter_config.r} | Alpha: ${ver.adapter_config.lora_alpha}<br>
+                                • LoRA Rank (r): ${ver.adapter_config.r} | Alpha (lora_alpha): ${ver.adapter_config.lora_alpha}<br>
                                 • Target Modules: ${JSON.stringify(ver.adapter_config.target_modules)}<br>
-                                • Base Model Path: ${ver.adapter_config.base_model}
+                                • Base Checkpoint: ${ver.adapter_config.base_model}
                             </div>
                         ` : ''}
                     </div>
                 `;
             } catch (err) {
-                container.innerHTML = `<div style="color:#dc2626;">सिस्टम स्थिति प्राप्त करने में त्रुटि: ${err.message}</div>`;
+                container.innerHTML = `<div style="color:#dc2626;">Error loading system status: ${err.message}</div>`;
             }
         }
 
-        // Helper Utilities
+        // ==========================================
+        // HELPER UTILITIES
+        // ==========================================
         function escapeHtml(text) {
             if (!text) return '';
             const map = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'};
@@ -2173,8 +2347,9 @@
         }
 
         function copySingleQuestion(qText) {
-            navigator.clipboard.writeText(qText).then(() => {
-                alert("प्रश्न क्लिपबोर्ड पर कॉपी हो गया!");
+            const cleanText = repairHindiDevanagariText(qText);
+            navigator.clipboard.writeText(cleanText).then(() => {
+                alert("प्रश्न क्लिपबोर्ड पर कॉपी हो गया! (Question copied to clipboard)");
             });
         }
 
@@ -2189,8 +2364,8 @@
                       CURRENT_UPLOAD_QUESTIONS.find(item => item.id === qId);
             if (!q) return;
             EDITING_QUESTION_ID = qId;
-            document.getElementById('modalEditQuestionText').value = q.question;
-            document.getElementById('modalEditAnswerText').value = q.answer || '';
+            document.getElementById('modalEditQuestionText').value = repairHindiDevanagariText(q.question);
+            document.getElementById('modalEditAnswerText').value = repairHindiDevanagariText(q.answer || '');
             document.getElementById('editQuestionModal').style.display = 'flex';
         }
 
@@ -2200,8 +2375,8 @@
         }
 
         async function saveEditedQuestion() {
-            const newQ = document.getElementById('modalEditQuestionText').value.trim();
-            const newA = document.getElementById('modalEditAnswerText').value.trim();
+            const newQ = repairHindiDevanagariText(document.getElementById('modalEditQuestionText').value.trim());
+            const newA = repairHindiDevanagariText(document.getElementById('modalEditAnswerText').value.trim());
             if (!newQ) return;
 
             const q = CURRENT_GENERATED_QUESTIONS.find(item => item.id === EDITING_QUESTION_ID) ||
@@ -2212,7 +2387,6 @@
                 q.is_edited = 1;
             }
 
-            // Also update database if in Question Bank
             try {
                 await fetch('/api/question_bank', {
                     method: 'PUT',
@@ -2226,7 +2400,6 @@
             } catch (e) {}
 
             closeEditModal();
-            // Re-render
             const el = document.getElementById(`qcard_${EDITING_QUESTION_ID}`);
             if (el && q) {
                 const parent = el.parentNode;
@@ -2237,4 +2410,3 @@
     </script>
 </body>
 </html>
-

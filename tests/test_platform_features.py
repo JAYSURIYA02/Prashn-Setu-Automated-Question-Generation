@@ -221,6 +221,37 @@ class TestTextbookProcessor(unittest.TestCase):
         self.assertNotIn("  ", clean)
         self.assertIn("परीक्षण", clean)
 
+    def test_devanagari_corrupt_matra_and_visual_order_repair(self):
+        """Verifies fix for visual short-i, detached combining marks, and broken lines."""
+        corrupted = (
+            "आरसी प्रसाद िसं\nह प्रकृित और जीवन-सं\nघष  को अपनी रचनाओ में प्रम ं खता से\nु\n"
+            "िचित्रत करने वाले किव हैं। वे अपनी रचनाओ में प्रेम, करुणा, त्याग-बिलदान, म ं िक् त\nु\n"
+            "और िमल-जलकर एक स ु ं\nदर स ु ं\nसार रचने क  कल्पना करते रहे हैं। जैसा िक ‘िचिड़या’\n"
+            "किवता में भी आपने पढ़ा। उन्होंने िचिड़या के माध्यम से िकतनी सं\nदर बात कही है— “िचिड़या बैठी ु\n"
+            "प्रेम-प्रीित क  रीित हमें िसखलाती है! वह जग के बं"
+        )
+        repaired = normalize_hindi_text(corrupted)
+
+        # Assert correct reordered and repaired Hindi words
+        self.assertIn("सिंह", repaired)
+        self.assertIn("प्रकृति", repaired)
+        self.assertIn("संघर्ष", repaired)
+        self.assertIn("कवि", repaired)
+        self.assertIn("बलिदान", repaired)
+        self.assertIn("मुक्ति", repaired)
+        self.assertIn("सुंदर", repaired)
+        self.assertIn("संसार", repaired)
+        self.assertIn("की कल्पना", repaired)
+        self.assertIn("कविता", repaired)
+        self.assertIn("चिड़िया", repaired)
+        self.assertIn("प्रेम-प्रीति की रीति", repaired)
+        self.assertIn("सिखलाती है", repaired)
+
+        # Ensure no detached placeholder marks (e.g. space before vowel marks)
+        self.assertNotIn(" ु", repaired)
+        self.assertNotIn(" िसं", repaired)
+        self.assertNotIn(" िक", repaired)
+
     def test_chunk_page_passages_preserves_sentence_boundaries(self):
         page = {
             "page_number": 1,

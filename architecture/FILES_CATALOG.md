@@ -1,87 +1,139 @@
-# Codebase File Catalog & Rationale: Prashn-Setu
+# Codebase File Catalog & Architectural Rationale: Prashn-Setu
 
-This document lists every file in the clean, modularized codebase, explaining **what it is**, **why it is present**, and **how it functions** within the pipeline.
-
----
-
-## 1. Unified Entry Point & Execution Launchers
-
-### 📄 [`run.py`](file:///mnt/a/iiits/5/NLP/PROJECT/run.py)
-* **What it is:** Unified single command center CLI for the entire project.
-* **Why it is present:** Replaces cluttered loose root scripts with a clean, subcommand-driven command line interface (`python run.py [download|prune|train-stage1|adapt-stage2|infer|evaluate|update-tracker]`).
-
-### 📁 [`scripts/`](file:///mnt/a/iiits/5/NLP/PROJECT/scripts)
-* **What it is:** Shell automation scripts for step-by-step pipeline execution (`01_download_data.sh` through `06_interactive_inference.sh`).
-* **Why it is present:** Provides single-click shell launchers for headless servers, batch jobs, and SLURM/HPC cluster execution.
+This document catalogs every component in the active **Prashn-Setu** repository, explaining **what it is**, **why it is present**, and **how it functions** within the end-to-end question generation platform.
 
 ---
 
-## 2. Core Python Source Packages (`src/`)
+## 1. Root Entry Points & Dispatchers
 
-### 📄 [`src/config.py`](file:///mnt/a/iiits/5/NLP/PROJECT/src/config.py)
-* **What it is:** Centralized configuration module using Python `@dataclass` structures (`ModelConfig`, `DataConfig`, `TrainingConfig`).
-* **Why it is present:** 
-  * Prevents hardcoding of hyperparameters, model identifiers, and paths across modules.
-  * Dynamically resolves absolute paths relative to `PROJECT_ROOT`.
-  * Enforces uniform maximum sequence lengths (`max_source_length=512`, `max_target_length=64`) and language tags (`<2hi>`).
+### 📄 `run.py`
+* **What it is:** Unified CLI entry point for the entire platform.
+* **Why it is present:** Provides single-command access to subcommands: `infer` (interactive terminal prompt), `demo` (browser web demo), `evaluate` (test set benchmarking), and `compare` (multi-model comparative benchmark).
+* **Inputs/Outputs:** CLI arguments $\to$ delegates to appropriate module in `src/`.
 
-### 📁 [`src/data/`](file:///mnt/a/iiits/5/NLP/PROJECT/src/data)
-* **[`src/data/download.py`](file:///mnt/a/iiits/5/NLP/PROJECT/src/data/download.py):** Downloads only the Hindi subset of `ai4bharat/IndicQuestionGeneration`, caches the Arrow dataset, exports JSONL files (`hi_train.jsonl`, `hi_validation.jsonl`, `hi_test.jsonl`), and creates the NCERT gold curriculum template (`data/ncert_gold_hindi.jsonl`).
-* **[`src/data/dataset.py`](file:///mnt/a/iiits/5/NLP/PROJECT/src/data/dataset.py):** PyTorch `Dataset` wrapper (`IndicQuestionGenerationDataset`). Formats inputs into IndicBART syntax (`"{answer} </s> {context} </s> <2hi>"`), tokenizes with `add_special_tokens=False`, and sets label padding to `-100` for loss masking.
+### 📄 `infer.py`
+* **What it is:** Standalone, minimal-dependency CLI inference script.
+* **Why it is present:** Enables instant verification of checkpoints on sample passages or custom text without running the full web server.
+* **Usage:** `python infer.py --context "..." --answer "..."`
 
-### 📁 [`src/models/`](file:///mnt/a/iiits/5/NLP/PROJECT/src/models)
-* **[`src/models/prune_vocab.py`](file:///mnt/a/iiits/5/NLP/PROJECT/src/models/prune_vocab.py):** Vocabulary pruner and embedding slicer. Discards non-Hindi Indic Unicode blocks (Bengali, Tamil, Telugu, Malayalam, Gujarati, Punjabi, Odia, Kannada), reducing vocabulary from 64,014 down to ~18,000 Hindi/Latin/Math tokens. Saves ~50M parameters and eliminates cross-script hallucinations.
+### 📄 `requirements.txt`
+* **What it is:** Python package dependency specification.
+* **Why it is present:** Specifies pinned package versions: `torch`, `transformers`, `peft`, `sentencepiece`, `protobuf`, `accelerate`, `evaluate`, `sacrebleu`, `rouge-score`, `scikit-learn`, `pandas`, `tqdm`, `pypdf`, and `reportlab`.
 
-### 📁 [`src/training/`](file:///mnt/a/iiits/5/NLP/PROJECT/src/training)
-* **[`src/training/metrics.py`](file:///mnt/a/iiits/5/NLP/PROJECT/src/training/metrics.py):** Modular metric computation engine computing SacreBLEU, ROUGE-1/2/L, and **chrF++** (character and word n-grams).
-* **[`src/training/train_stage1.py`](file:///mnt/a/iiits/5/NLP/PROJECT/src/training/train_stage1.py):** Stage 1 fine-tuning pipeline on the IndicNLG Hindi split using `Seq2SeqTrainer`, gradient accumulation, FP16/BF16, and validation checkpoints.
-* **[`src/training/adapt_stage2.py`](file:///mnt/a/iiits/5/NLP/PROJECT/src/training/adapt_stage2.py):** Stage 2 domain adaptation engine on 300–500 verified NCERT textbook questions with **LoRA (PEFT)** on `q_proj` and `v_proj` to prevent catastrophic forgetting.
-
-### 📁 [`src/evaluation/`](file:///mnt/a/iiits/5/NLP/PROJECT/src/evaluation)
-* **[`src/evaluation/inference.py`](file:///mnt/a/iiits/5/NLP/PROJECT/src/evaluation/inference.py):** Real-time generation class (`QuestionGenerator`) and interactive terminal session. Supports beam search ($k=4$), repetition penalty, and automatic LoRA adapter loading.
-* **[`src/evaluation/evaluate.py`](file:///mnt/a/iiits/5/NLP/PROJECT/src/evaluation/evaluate.py):** Benchmarking engine that generates predictions across test splits, computes metrics, and exports qualitative side-by-side JSON reports (`eval_results.json`).
-
-### 📁 [`src/utils/`](file:///mnt/a/iiits/5/NLP/PROJECT/src/utils)
-* **[`src/utils/tracker.py`](file:///mnt/a/iiits/5/NLP/PROJECT/src/utils/tracker.py):** State inspection engine. Scans all files, computes SHA-256 hashes, counts lines of code, detects data/checkpoint creation, and regenerates `architecture/SYSTEM_STATE_TRACKER.md`.
+### 📄 `README.md`
+* **What it is:** Master project documentation and user guide.
+* **Why it is present:** Documents transfer learning architecture, verified benchmarks, research integrity audit, installation, API references, and future curation guidelines.
 
 ---
 
-## 3. Directory Hierarchy
+## 2. Model Checkpoints (`checkpoints/`)
 
-```
-PROJECT/
-├── architecture/                             # System design specifications
-│   ├── README.md                             # Architecture index & guide
-│   ├── FILES_CATALOG.md                      # (This file) Complete file inventory & rationale
-│   ├── COMPONENT_INTERACTIONS.md             # Diagrams & interaction workflows
-│   ├── SOLUTION_ANALYSIS_AND_ALTERNATIVES.md # Benchmark against other models & paradigms
-│   ├── PREREQUISITES_AND_ENVIRONMENT_SETUP.md# Hardware & software dependency specs
-│   ├── OPERATIONAL_GUIDELINES.md             # Rules for agents & developers
-│   └── SYSTEM_STATE_TRACKER.md               # Live automated change log & state
-├── src/                                      # Clean Python source package
-│   ├── config.py                             # Centralized settings & configurations
-│   ├── data/
-│   │   ├── download.py                       # Data acquisition & JSONL export
-│   │   └── dataset.py                        # Dataset loader & sequence formatting
-│   ├── models/
-│   │   └── prune_vocab.py                    # Script filtering & embedding slicer
-│   ├── training/
-│   │   ├── train_stage1.py                   # Stage 1 fine-tuning engine
-│   │   ├── adapt_stage2.py                   # Stage 2 NCERT Gold LoRA adaptation
-│   │   └── metrics.py                        # Shared evaluation metrics
-│   ├── evaluation/
-│   │   ├── inference.py                      # Interactive CLI & inference API
-│   │   └── evaluate.py                       # Benchmarking against test splits
-│   └── utils/
-│       └── tracker.py                        # Architecture state tracker
-├── scripts/                                  # Shell automation runners
-│   ├── 01_download_data.sh
-│   ├── 02_prune_vocab.sh
-│   ├── 03_train_stage1.sh
-│   ├── 04_adapt_stage2.sh
-│   ├── 05_evaluate.sh
-│   └── 06_interactive_inference.sh
-├── run.py                                    # Unified CLI Command Center
-├── requirements.txt                          # Python library dependencies
-└── README.md                                 # Top-level quickstart guide
-```
+### 📁 `checkpoints/stage1_indicnlg_qg/` (~932 MB)
+* **What it is:** Supervised fine-tuned base checkpoint of `ai4bharat/IndicBART` (244M parameters).
+* **Contents:** `model.safetensors`, `config.json`, `generation_config.json`, `tokenizer.json`, `tokenizer_config.json`.
+* **Provenance:** Fine-tuned for 5 epochs on ~70,000 Hindi question-generation pairs from `ai4bharat/IndicQuestionGeneration`. Serves as the base model for all operations.
+
+### 📁 `checkpoints/stage2_ncert_gold_lora/` (~4.7 MB)
+* **What it is:** Parameter-Efficient Fine-Tuning (LoRA) adapter architecture for NCERT curriculum adaptation.
+* **Contents:** `adapter_model.safetensors`, `adapter_config.json`, `tokenizer.json`, `tokenizer_config.json`.
+* **Configuration:** Rank $r=16$, Scaling $\alpha=32$, Dropout $p=0.05$, targeting attention projection layers `q_proj` and `v_proj` (1.18M trainable parameters / 0.481%).
+* **Role:** Primary model for all standard question generation in the platform. Attaches over Stage 1 base weights.
+
+---
+
+## 3. Core Source Modules (`src/`)
+
+### 📄 `src/config.py`
+* **What it is:** Centralized configuration module using typed dataclasses (`ModelConfig`, `DataConfig`, `TrainingConfig`).
+* **Why it is present:** Dynamically resolves absolute paths relative to `PROJECT_ROOT`, establishes sequence length limits (`max_source_length=512`, `max_target_length=64`), and sets Hindi language tags (`<2hi>`).
+
+### 📁 `src/data/` (Data Management & Storage)
+* **`src/data/question_bank.py`:**
+  * **What it is:** SQLite database layer for persistent question storage (`data/question_bank.db`).
+  * **Capabilities:** Full CRUD (`save_question`, `get_questions`, `update_question`, `delete_question`), full-text search, filtering by category and difficulty, quiz attempt logging (`quiz_history`), and summary statistics.
+
+### 📁 `src/demo/` (Demonstration Server & Web UI)
+* **`src/demo/app.py`:**
+  * **What it is:** High-performance, zero-dependency HTTP server built on Python's `http.server`.
+  * **Capabilities:** Serves the single-page application (`index.html`), local TrueType fonts (`/fonts/`), and implements all REST endpoints: `/api/health`, `/api/model_status`, `/api/models`, `/api/generate`, `/api/compare`, `/api/evidence`, `/api/upload_textbook`, `/api/question_bank`, `/api/quiz/evaluate`, `/api/paper/*`, `/api/benchmark_results`.
+* **`src/demo/index.html`:**
+  * **What it is:** Responsive single-page web application.
+  * **Capabilities:** 4 unified workspaces (Question Studio, Practice & Quiz, Model Comparison, Research & System Analytics), inline evidence highlighting, Devanagari text normalization, interactive practice test engine, multi-section paper builder, and bilingual button labeling.
+* **`src/demo/fonts/`:**
+  * **What it is:** Bundled Google TrueType fonts (`NotoSansDevanagari-Regular.ttf` and `NotoSansDevanagari-Bold.ttf`).
+  * **Why it is present:** Guarantees crisp Devanagari rendering across all platforms (Windows, Linux, macOS) for both web display and ReportLab PDF exports.
+
+### 📁 `src/evaluation/` (Inference, Generation & Assessment Engines)
+* **`src/evaluation/inference.py`:**
+  * **What it is:** Core `QuestionGenerator` class wrapping IndicBART inference.
+  * **Capabilities:** Prompt formatting (`"{answer} </s> {context} </s> <2hi>"`), beam search decoding, nucleus sampling, candidate answer extraction via Devanagari POS heuristics, and token deduplication.
+* **`src/evaluation/model_registry.py`:**
+  * **What it is:** Model manager maintaining singleton model lifecycles and adapter isolation.
+  * **Capabilities:** Pre-flight verification (`verify_stage2_checkpoint`), shared weights loading, zero-disk-reload switching between Stage 1 and Stage 2 using `with model.disable_adapter():`.
+* **`src/evaluation/advanced_generator.py`:**
+  * **What it is:** Higher-level pedagogical question generation engine.
+  * **Capabilities:** Categorizes questions into Factual, Conceptual, Reasoning, HOTS, and MCQ. Calibrates difficulty (Easy, Medium, Hard). Synthesizes authentic in-passage distractors for multiple-choice questions.
+* **`src/evaluation/evidence_checker.py`:**
+  * **What it is:** Grounding and answerability verification engine.
+  * **Capabilities:** Splits Hindi passages while preserving exact character start/end offsets, computes lexical overlap between question/answer and context sentences, classifies support into `evidence_found`, `needs_review`, or `unsupported`, and detects duplicate questions.
+* **`src/evaluation/textbook_processor.py`:**
+  * **What it is:** Document parser and chapter chunking engine.
+  * **Capabilities:** Extracts text from PDF and TXT files, applies Devanagari Unicode repair (reordering visual-order `ि`, reattaching space/newline-detached matras, repairing broken line wraps), and divides text into sentence-bounded chunks (150–250 words) to prevent GPU out-of-memory errors.
+* **`src/evaluation/quiz_engine.py`:**
+  * **What it is:** Interactive practice and assessment evaluation engine.
+  * **Capabilities:** Grades multiple-choice questions, applies token overlap and morphological matching for Hindi short answers, computes percentage scores, and logs results to the database.
+* **`src/evaluation/paper_builder.py`:**
+  * **What it is:** Examination paper assembler and multi-format exporter.
+  * **Capabilities:** Validates section marks against total marks, renders publication-quality Devanagari PDFs with student answer privacy (suppresses answers in student copy), exports dedicated Answer Key PDFs, exports UTF-8 BOM CSVs for Excel, and produces structured JSON for LMS import.
+* **`src/evaluation/analytics_loader.py`:**
+  * **What it is:** Research evaluation metrics parser.
+  * **Capabilities:** Loads quantitative overlap benchmarks (SacreBLEU, chrF++, ROUGE-L), reports blinded human evaluation status honestly as pending validation, and compiles qualitative error taxonomies.
+* **`src/evaluation/compare_models.py`:**
+  * **What it is:** CLI multi-model comparative benchmarking harness.
+  * **Capabilities:** Runs comparative evaluation across models on held-out test data, tracks per-model latency, and produces blinded evaluation CSVs and blinding keys.
+* **`src/evaluation/evaluate.py`:**
+  * **What it is:** Standalone test-set evaluation runner.
+  * **Capabilities:** Evaluates single checkpoints against test splits with batch acceleration and exports metrics.
+
+---
+
+## 4. Documentation & Research Artifacts (`docs/` & `results/`)
+
+### 📁 `docs/`
+* **`docs/ARCHITECTURE.md`:** Comprehensive system architecture, dataflow pipelines, and safety gates.
+* **`docs/TECHNICAL_REPORT.md`:** Scientific technical report documenting the Stage 1 baseline, resolution of the Devanagari ROUGE tokenization defect, error typology, and the LoRA framework.
+* **`docs/PROJECT_STATE_AND_EXECUTION_PLAN.md`:** Component inventory and execution tracking.
+* **`docs/EXPERIMENT_LOG.md`:** Chronological record of training runs, evaluations, and hardware environments.
+* **`docs/NCERT_GOLD_CURATION_GUIDE.md`:** Detailed rubric and guidelines for collecting and verifying native-Hindi educational datasets.
+
+### 📁 `results/`
+* **`results/stage1_test_results_full.json`:** Verified benchmark across all 10,553 held-out test examples (SacreBLEU: 10.196, chrF++: 29.397, Hindi ROUGE-L: 27.332).
+* **`results/model_comparison_results.json`:** 100-sample comparative evaluation artifact comparing Stage 1 and Stage 2.
+* **`results/stage1_test_results.json`:** Historical 5-sample diagnostic artifact documenting early debugging runs.
+* **`results/human_eval_sample_100.csv`:** Clean, unrated 100-sample human evaluation template.
+* **`results/human_eval_blinded_comparison.csv`:** Clean, unrated 50-sample blinded comparison template.
+* **`results/human_eval_blind_key.json`:** Secret model blinding key for rater evaluations.
+* **`results/HUMAN_EVALUATION_PROTOCOL.md`:** 5-dimension scoring rubric and inter-annotator agreement methodology.
+* **`results/QUALITATIVE_ERROR_ANALYSIS.md`:** Systematic qualitative error taxonomy detailing Wh-word mismatches, numeric hallucination, and distractor confusion.
+* **`results/mock_human_eval_summary.md` / `.json`:** Synthetic test fixture reports used exclusively to verify the statistical analysis engine.
+
+---
+
+## 5. Automated Test Suites (`tests/`)
+
+### 📄 `tests/test_platform_features.py` (24 Tests)
+* Validates Stage 2 LoRA model pre-flight verification and primary status.
+* Tests sentence splitting, character offset mapping, and evidence grounding classification.
+* Tests MCQ distractor synthesis and category question formatting.
+* Tests textbook text normalization, Devanagari repair, and chunking.
+* Tests SQLite Question Bank CRUD, search, filtering, and summary statistics.
+* Tests quiz evaluation, exact MCQ grading, and fuzzy short-answer scoring.
+* Tests question paper marks validation, student answer suppression, and Devanagari PDF rendering.
+* Tests REST API endpoints (`/api/health`, `/api/model_status`, `/api/question_bank`).
+
+### 📄 `tests/test_model_comparison.py` (24 Tests)
+* Validates model registry initialization and availability detection.
+* Tests `ModelManager` adapter isolation, shared weights lifecycle, and zero-reload switching.
+* Tests input validation for empty contexts, invalid decoding strategies, and out-of-range counts.
+* Tests graceful status reporting for unavailable models.
+* Tests comparative generation parity and live adapter switching.

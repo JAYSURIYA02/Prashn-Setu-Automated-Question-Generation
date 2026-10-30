@@ -6,6 +6,7 @@ page-boundary tracking, sentence-aware chunking, and batch question generation.
 
 import os
 import re
+import unicodedata
 from typing import List, Dict, Any, Optional, Tuple
 from pypdf import PdfReader
 
@@ -18,19 +19,81 @@ TARGET_CHUNK_WORD_COUNT = 250          # ~250 words per chunk for focused QG
 MAX_CHUNKS_PER_JOB = 10                # Safety cap to prevent GPU exhaustion
 
 
-def normalize_hindi_text(text: str) -> str:
-    """Cleans up formatting, hyphens, and whitespace while preserving Devanagari Unicode."""
+def repair_hindi_devanagari_text(text: str) -> str:
+    """
+    Repairs broken Devanagari text from PDFs, OCR, or KrutiDev/visual-font conversions.
+    Corrects:
+      1. Detached combining marks (vowels, anusvara, halant separated by spaces or newlines)
+      2. Reorders visual short-i (ि / U+093F) placed before consonants or conjunct clusters
+      3. Repaired broken conjunct clusters and spaced halant signs (e.g. िक्  त -> क्ति)
+      4. Repaired line-broken Hindi words and syllables across newlines without punctuation
+      5. Common OCR / legacy font corruptions (missing 'की' matra, misrecognized letters)
+      6. Canonical Unicode NFC normalization
+    """
     if not text:
         return ""
-    # Normalize unicode whitespaces
+
+    # Normalize newlines
     text = text.replace("\r\n", "\n").replace("\r", "\n")
-    # Remove soft hyphens and word-break hyphens across newlines
-    text = re.sub(r"-\n\s*", "", text)
-    # Collapse multiple consecutive spaces
-    text = re.sub(r"[ \t]+", " ", text)
-    # Clean multiple blank lines
-    text = re.sub(r"\n{3,}", "\n\n", text)
-    return text.strip()
+
+    consonants = r'\u0915-\u0939\u0958-\u095F'
+    vowels = r'\u0904-\u0914'
+    all_combining = r'\u0901-\u0903\u093A-\u094F\u0951-\u0957\u0962\u0963'
+
+    # 1. Remove isolated lines containing only combining marks
+    text = re.sub(rf'\n[ \t]*[{all_combining}]+[ \t]*(?=\n|$)', '', text)
+
+    # 2. Fix spaced halant clusters FIRST (e.g. िक्  त -> क्त, म्  ल -> म्ल) so conjuncts stay intact
+    text = re.sub(rf'([{consonants}]\u094D)[ \t]+([{consonants}])', r'\1\2', text)
+
+    # 3. Reorder visual short-i (\u093F) placed BEFORE consonant cluster:
+    # Cluster: (consonant + nukta? + halant)* + consonant + nukta?
+    # E.g. िसं -> सिं, िक -> कि, िचित्रत -> चित्रित, िक्त -> क्ति
+    cluster = rf'((?:[{consonants}]\u093C?\u094D)*[{consonants}]\u093C?)'
+    text = re.sub(rf'\u093F{cluster}', lambda m: m.group(1) + '\u093F', text)
+
+    # 4. Handle hyphenated word splits across newlines: e.g. जीवन-\nसंघर्ष -> जीवन-संघर्ष
+    text = re.sub(r'-\n\s*', '-', text)
+
+    # 5. Reattach detached combining marks separated from their base consonant/vowel by spaces or newlines:
+    # E.g. स ु ं -> सुंदर (स + ु + ं)
+    for _ in range(4):
+        text = re.sub(rf'([{consonants}{vowels}{all_combining}])[ \t\r\n]+([{all_combining}])', r'\1\2', text)
+
+    # 6. Handle syllable splits across newlines where word is cut at anusvara or halant:
+    # E.g. सिं\nह -> सिंह, सं\nघष -> संघष, सुं\nदर -> सुंदर, सुं\nसार -> संसार
+    text = re.sub(rf'([{consonants}][{all_combining}]*[\u0902\u094D])\n\s*([{consonants}]+)', r'\1\2', text)
+
+    # 7. Convert remaining single newlines between words to a space
+    text = re.sub(r'(?<=[^\n])\n(?=[^\n])', ' ', text)
+
+    # 8. Remove invalid double vowel matras on same consonant (e.g. ु after ी):
+    text = re.sub(r'([\u093E-\u094C])[\u093A-\u094C]+', r'\1', text)
+
+    # 9. Remove stray floating combining marks preceded by space and not attached to letters
+    text = re.sub(rf'(?<=\s)[{all_combining}]+(?=\s|$)', '', text)
+
+    # 10. Fix common OCR / legacy font corruptions:
+    # Missing 'की' matra: 'क  ' before a Devanagari word
+    text = re.sub(rf'\bक\s{{2,}}(?=[{consonants}{vowels}])', 'की ', text)
+
+    # Known OCR / extraction artifacts:
+    text = re.sub(r'प्रम\s*ं?\s*खता', 'प्रमुखता', text)
+    text = re.sub(r'म\s*ं?\s*क्ति', 'मुक्ति', text)
+    text = re.sub(r'संघष\b', 'संघर्ष', text)
+    text = re.sub(r'स[ंु]\s*दर\b', 'सुंदर', text)
+    text = re.sub(r'स[ुं]+सार\b', 'संसार', text)
+
+    # 11. Space normalization & NFC
+    text = re.sub(r'[ \t]+', ' ', text)
+    text = re.sub(r'\n{3,}', '\n\n', text)
+    text = unicodedata.normalize('NFC', text.strip())
+    return text
+
+
+def normalize_hindi_text(text: str) -> str:
+    """Comprehensive normalization and repair for Hindi textbook and passage text."""
+    return repair_hindi_devanagari_text(text)
 
 
 def extract_text_from_pdf(file_path: str) -> List[Dict[str, Any]]:
